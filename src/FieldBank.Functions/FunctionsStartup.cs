@@ -1,41 +1,70 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Serilog;
+using Microsoft.Extensions.Logging;
 using FieldBank.Infrastructure.Extensions;
-using FieldBank.Infrastructure.Repositories;
+using FieldBank.Application.Extensions;
 using FieldBank.Infrastructure.Caching;
+using MediatR;
+using Serilog;
 
-namespace FieldBank.Functions
+namespace FieldBank.Functions;
+
+/// <summary>
+/// Initializes the Generic Host for all Lambdas,
+/// registering DbContext, repositories, application services, and caching.
+/// </summary>
+public static class FunctionsStartup
 {
-    /// <summary>
-    /// Esta clase se encarga de inicializar el Generic Host para todas las Lambdas,
-    /// registrando DbContext, repositorios y caching.
-    /// </summary>
-    public static class FunctionsStartup
+    public static IHostBuilder ConfigureServices(this IHostBuilder builder)
     {
-        public static IHostBuilder ConfigureServices(this IHostBuilder builder)
-        {
-            return builder
-                // Configuración de Serilog
-                .UseSerilog((context, services, configuration) =>
+        // Early startup log (optional)
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .CreateLogger();
+
+        Log.Information("Serilog is working in startup!");
+
+        return builder
+            .UseSerilog((context, services, configuration) =>
+            {
+                var environment = context.HostingEnvironment.EnvironmentName;
+                var isDevelopment = environment.Equals("Development", StringComparison.OrdinalIgnoreCase);
+
+                configuration
+                    .ReadFrom.Configuration(context.Configuration)
+                    .ReadFrom.Services(services)
+                    .Enrich.FromLogContext()
+                    .Enrich.WithThreadId()
+                    .Enrich.WithProcessId()
+                    .Enrich.WithEnvironmentUserName()
+                    .Enrich.WithProperty("Application", "FieldBank")
+                    .Enrich.WithProperty("Environment", environment);
+
+                // Console sink
+                configuration.WriteTo.Console(
+                    outputTemplate: isDevelopment
+                        ? "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}"
+                        : "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}");
+
+                // File sink only in development
+                if (isDevelopment)
                 {
-                    configuration
-                        .ReadFrom.Configuration(context.Configuration)
-                        .Enrich.FromLogContext();
-                })
-
-                // Registro de servicios en el contenedor DI
-                .ConfigureServices((context, services) =>
-                {
-                    // 1. EF Core con configuración centralizada
-                    services.AddFieldBankDbContext(context.Configuration);
-
-                    // 2. Repositorios genéricos
-                    services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-
-                    // 3. Cache service
-                    services.AddSingleton<ICacheService, RedisCacheService>();
-                });
-        }
+                    configuration.WriteTo.File(
+                        path: "logs/fieldbank-.log",
+                        rollingInterval: RollingInterval.Day,
+                        retainedFileCountLimit: 7,
+                        outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}");
+                }
+            })
+            .ConfigureServices((context, services) =>
+            {
+                services.AddFieldBankDbContext(context.Configuration);
+                services.AddFieldBankInfrastructure();
+                services.AddFieldBankApplicationServices();
+                services.AddSingleton<ICacheService, RedisCacheService>();
+                services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Application.Features.Fields.Commands.CreateField.CreateFieldCommand).Assembly));
+                services.AddLogging();
+            });
     }
 }
+

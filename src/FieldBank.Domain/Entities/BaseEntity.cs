@@ -1,10 +1,9 @@
-namespace FieldBank.Domain.Entities
+namespace FieldBank.Domain.Entities;
+
+public abstract class BaseEntity
 {
-    public abstract class BaseEntity
-    {
-        public DateTime CreatedDate { get; set; }
-        public DateTime? ModifiedDate { get; set; }
-        public string CreatedBy { get; set; } = string.Empty;
-        public string? ModifiedBy { get; set; }
-    }
+    public DateTime CreatedDate { get; set; }
+    public DateTime? ModifiedDate { get; set; }
+    public string CreatedBy { get; set; } = string.Empty;
+    public string? ModifiedBy { get; set; }
 } 
