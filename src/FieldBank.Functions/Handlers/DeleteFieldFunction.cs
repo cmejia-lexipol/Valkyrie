@@ -1,5 +1,10 @@
 using Amazon.Lambda.Core;
 using MediatR;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using FieldBank.Infrastructure.Extensions;
+using FieldBank.Application.Extensions;
 
 namespace FieldBank.Functions.Handlers;
 
@@ -13,11 +18,26 @@ public class DeleteFieldFunction
         _mediator = mediator;
     }
 
-    // Parameterless constructor for Lambda test tool
+    // Parameterless constructor for AWS Lambda (production)
     public DeleteFieldFunction()
     {
-        // Use centralized test configuration helper
-        _mediator = TestConfigurationHelper.GetTestService<IMediator>();
+        var host = new HostBuilder()
+            .ConfigureAppConfiguration((context, config) =>
+            {
+                config.AddJsonFile("appsettings.json", optional: true)
+                      .AddEnvironmentVariables();
+            })
+            .ConfigureServices((context, services) =>
+            {
+                services.AddFieldBankDbContext(context.Configuration);
+                services.AddFieldBankInfrastructure();
+                services.AddFieldBankApplicationServices();
+                services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Application.Features.Fields.Commands.CreateField.CreateFieldCommand).Assembly));
+                services.AddLogging();
+            })
+            .Build();
+
+        _mediator = host.Services.GetRequiredService<IMediator>();
     }
 
     /// <summary>

@@ -1,6 +1,11 @@
 using Amazon.Lambda.Core;
 using MediatR;
 using System.Text.Json;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using FieldBank.Infrastructure.Extensions;
+using FieldBank.Application.Extensions;
 
 namespace FieldBank.Functions.Handlers;
 
@@ -14,11 +19,27 @@ public class CreateFieldFunction
         _mediator = mediator;
     }
 
-    // Parameterless constructor for Lambda test tool
+    // Parameterless constructor for AWS Lambda (production)
     public CreateFieldFunction()
     {
-        // Use centralized test configuration helper
-        _mediator = TestConfigurationHelper.GetTestService<IMediator>();
+        // Build the Generic Host using FunctionsStartup
+        var host = new HostBuilder()
+            .ConfigureAppConfiguration((context, config) =>
+            {
+                config.AddJsonFile("appsettings.json", optional: true)
+                      .AddEnvironmentVariables();
+            })
+            .ConfigureServices((context, services) =>
+            {
+                services.AddFieldBankDbContext(context.Configuration);
+                services.AddFieldBankInfrastructure();
+                services.AddFieldBankApplicationServices();
+                services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Application.Features.Fields.Commands.CreateField.CreateFieldCommand).Assembly));
+                services.AddLogging();
+            })
+            .Build();
+
+        _mediator = host.Services.GetRequiredService<IMediator>();
     }
 
     /// <summary>
@@ -39,7 +60,7 @@ public class CreateFieldFunction
                 Label = request.Label,
                 Description = request.Description
             });
-            
+
             context.Logger.LogInformation($"Created field with ID: {field.Id}");
             return JsonSerializer.Serialize(field);
         }
@@ -61,4 +82,4 @@ public class CreateFieldRequest
     public string Name { get; set; } = string.Empty;
     public string Label { get; set; } = string.Empty;
     public string? Description { get; set; }
-} 
+}

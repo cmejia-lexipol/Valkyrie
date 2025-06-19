@@ -1,6 +1,11 @@
 using Amazon.Lambda.Core;
 using MediatR;
 using System.Text.Json;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using FieldBank.Infrastructure.Extensions;
+using FieldBank.Application.Extensions;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
@@ -20,8 +25,24 @@ public class Function
     // Parameterless constructor for Lambda test tool
     public Function()
     {
-        // Use centralized test configuration helper
-        _mediator = TestConfigurationHelper.GetTestService<IMediator>();
+        // Build the Generic Host using FunctionsStartup
+        var host = new HostBuilder()
+            .ConfigureAppConfiguration((context, config) =>
+            {
+                config.AddJsonFile("appsettings.json", optional: true)
+                      .AddEnvironmentVariables();
+            })
+            .ConfigureServices((context, services) =>
+            {
+                services.AddFieldBankDbContext(context.Configuration);
+                services.AddFieldBankInfrastructure();
+                services.AddFieldBankApplicationServices();
+                services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Application.Features.Fields.Commands.CreateField.CreateFieldCommand).Assembly));
+                services.AddLogging();
+            })
+            .Build();
+
+        _mediator = host.Services.GetRequiredService<IMediator>();
     }
 
     /// <summary>
