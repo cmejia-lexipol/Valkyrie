@@ -23,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementos de la solución",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FieldBank.Api", "src\FieldBank.Api\FieldBank.Api.csproj", "{22BDA454-BA50-8A42-BC3C-45B4C0172525}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FieldBank.Application.Tests", "tests\FieldBank.Application.Tests\FieldBank.Application.Tests.csproj", "{184DA3F2-7FE6-B9AD-AB2A-7466B89D0CEC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{22BDA454-BA50-8A42-BC3C-45B4C0172525}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22BDA454-BA50-8A42-BC3C-45B4C0172525}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{22BDA454-BA50-8A42-BC3C-45B4C0172525}.Release|Any CPU.Build.0 = Release|Any CPU
+		{184DA3F2-7FE6-B9AD-AB2A-7466B89D0CEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{184DA3F2-7FE6-B9AD-AB2A-7466B89D0CEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{184DA3F2-7FE6-B9AD-AB2A-7466B89D0CEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{184DA3F2-7FE6-B9AD-AB2A-7466B89D0CEC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,6 +65,7 @@ Global
 		{C520F8D8-EC76-29C9-14D4-87E9232E8C94} = {0317758D-756B-43D2-B84F-E9BA6B3737B6}
 		{969F89F3-3D6A-A3CB-D723-87BCE946D5D5} = {0317758D-756B-43D2-B84F-E9BA6B3737B6}
 		{22BDA454-BA50-8A42-BC3C-45B4C0172525} = {0317758D-756B-43D2-B84F-E9BA6B3737B6}
+		{184DA3F2-7FE6-B9AD-AB2A-7466B89D0CEC} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DA392FA4-F89B-4F39-9FE1-B3FFD62A2DE0}
