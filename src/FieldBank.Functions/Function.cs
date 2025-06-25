@@ -53,7 +53,7 @@ public class Function
     /// <returns></returns>
     public async Task<string> FunctionHandler(FieldRequest request, ILambdaContext context)
     {
-        context.Logger.LogInformation($"Processing request: {JsonSerializer.Serialize(request)}");
+        context.Logger.LogInformation($"Processing request: {JsonSerializer.Serialize(request ?? new FieldRequest())}");
 
         try
         {
