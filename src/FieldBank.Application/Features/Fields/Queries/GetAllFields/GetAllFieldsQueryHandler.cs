@@ -27,4 +27,4 @@ public class GetAllFieldsQueryHandler : IRequestHandler<GetAllFieldsQuery, IEnum
         var fields = await _fieldRepository.GetAllAsync();
         return _mapper.Map<IEnumerable<FieldDto>>(fields);
     }
-} 
+}

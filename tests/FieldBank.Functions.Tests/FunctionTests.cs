@@ -22,7 +22,7 @@ public class FunctionTests
         _mockMediator = new Mock<IMediator>();
         _mockContext = new Mock<ILambdaContext>();
 
-        // Setup del Logger para evitar NullReferenceException
+        // Setup the Logger to avoid NullReferenceException
         var mockLambdaLogger = new Mock<ILambdaLogger>();
         _mockContext.Setup(c => c.Logger).Returns(mockLambdaLogger.Object);
 

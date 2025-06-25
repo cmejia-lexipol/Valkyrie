@@ -66,7 +66,7 @@ public class Function
                         Label = request.Label ?? "Default Label",
                         Description = request.Description
                     });
-                    
+
                     context.Logger.LogInformation($"Created field with ID: {createdField.Id}");
                     return JsonSerializer.Serialize(createdField);
 
@@ -104,7 +104,7 @@ public class Function
                             Label = request.Label ?? "Default Label",
                             Description = request.Description
                         });
-                        
+
                         context.Logger.LogInformation($"Updated field: {updatedField.Name}");
                         return JsonSerializer.Serialize(updatedField);
                     }
@@ -152,4 +152,4 @@ public class FieldRequest
     public string? Name { get; set; }
     public string? Label { get; set; }
     public string? Description { get; set; }
-}   
+}

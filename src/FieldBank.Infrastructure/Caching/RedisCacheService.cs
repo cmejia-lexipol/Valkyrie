@@ -38,4 +38,4 @@ public class RedisCacheService : ICacheService
     {
         return Task.FromResult(_cache.ContainsKey(key));
     }
-} 
+}

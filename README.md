@@ -2,6 +2,100 @@
 
 A .NET 8 AWS Lambda project implementing Clean Architecture principles for managing Field entities with PostgreSQL database.
 
+---
+
+## Why are there two solutions? (FieldBank.Api and FieldBank.Functions)
+
+### FieldBank.Api
+- **Traditional ASP.NET Core Minimal API**
+- Exposes HTTP endpoints directly, ideal for local development and quick testing.
+- Easily test the API using Swagger.
+- **Typical deployment:** Container, EC2, ECS, App Service, or Lambda with an adapter.
+
+### FieldBank.Functions
+- **Serverless solution for AWS Lambda**
+- Each operation (get, create, update, delete, etc.) can be an independent Lambda (Handlers) or a unified Lambda for testing (Function.cs, TestFunctions.cs).
+- **Typical deployment:** AWS Lambda, integrated with API Gateway.
+
+---
+
+## How to test each solution?
+
+### FieldBank.Api (Traditional API with Swagger)
+
+- **Purpose:**  
+  Expose and test the API in a traditional way, with REST endpoints and interactive documentation.
+
+- **How to start:**
+  - **Visual Studio:**
+    1. Right-click the `FieldBank.Api` project
+    2. Select "Set as Startup Project"
+    3. Press F5 or "Start Debugging"
+  - **VS Code:**
+    1. Open the project folder
+    2. Run:
+       ```bash
+       dotnet run --project src/FieldBank.Api
+       ```
+    3. Open your browser at [http://localhost:5024/swagger](http://localhost:5024/swagger) (or the port shown in the console)
+
+- **How to test:**  
+  Use the Swagger UI to interactively test all endpoints (`/fields`, `/fields/{id}`, etc.).
+
+---
+
+### FieldBank.Functions (AWS Lambda)
+
+- **Purpose:**  
+  Test and deploy your logic as Lambda functions, either one function per operation or a unified function for testing.
+
+- **Key structure:**
+  - **Handlers/**: Each file is a Lambda for a specific operation (e.g., `GetFieldsFunction`, `CreateFieldFunction`, etc.)
+  - **Function.cs**: A unified Lambda entry point, useful for end-to-end or integration testing.
+  - **TestFunctions.cs**: Special function for local testing with the AWS Lambda Test Tool.
+
+- **How to test:**
+  - **Visual Studio:**
+    1. Right-click the `FieldBank.Functions` project
+    2. Select "Debug" → "Start New Instance"
+    3. Choose "AWS Lambda Test Tool" as the launch profile
+    4. Use the Test Tool panel to send test requests (see examples in the README)
+  - **VS Code:**
+    1. Open the project folder
+    2. Install the AWS Lambda Test Tool if you don't have it:
+       ```bash
+       dotnet tool install -g Amazon.Lambda.TestTool-8.0
+       ```
+    3. Run:
+       ```bash
+       dotnet lambda test-tool-8.0
+       ```
+    4. Open your browser at the URL shown in the console (usually [http://localhost:5050](http://localhost:5050))
+    5. Select the `TestFunctions` class for unified local testing, or a specific handler for unit testing.
+
+- **What's the difference between Function.cs, the Handlers, and TestFunctions?**
+  - **Function.cs**: Lets you test the entire solution as a single Lambda (useful for integration or migration scenarios).
+  - **Handlers/**: Each file is a specialized Lambda for a single operation (best for production and granular deployment).
+  - **TestFunctions.cs**: Designed for quick local testing, lets you test all operations from a single entry point using the AWS Lambda Test Tool.
+
+---
+
+## Quick Start (Summary of how to run and test)
+
+### FieldBank.Api (Swagger)
+- **Visual Studio:** F5 on `FieldBank.Api`
+- **VS Code:** `dotnet run --project src/FieldBank.Api`
+- **Go to:** `/swagger`
+
+### FieldBank.Functions (Lambda)
+- **Visual Studio:** F5 on `FieldBank.Functions` with the "AWS Lambda Test Tool" profile
+- **VS Code:**
+  - Install the test tool
+  - `dotnet lambda test-tool-8.0`
+  - Use your browser to test
+
+---
+
 ## Project Overview
 
 FieldBank is a serverless application built with AWS Lambda that provides CRUD operations for Field entities. The project follows Clean Architecture principles to ensure maintainability, testability, and scalability.
@@ -14,7 +108,8 @@ FieldBank is a serverless application built with AWS Lambda that provides CRUD o
     │   ├─ FieldBank.Domain/           ← Entities, Interfaces, Business Rules
     │   ├─ FieldBank.Application/      ← Business Logic, Services
     │   ├─ FieldBank.Infrastructure/   ← Data Access, External Services
-    │   └─ FieldBank.Functions/        ← AWS Lambda Handlers, API Endpoints
+    │   └─ FieldBank.Functions/        ← AWS Lambda Handlers
+    │   └─ FieldBank.Api/              ← API Endpoints
     └─ tests/                          ← Unit and Integration Tests
 ```
 
@@ -24,6 +119,7 @@ FieldBank is a serverless application built with AWS Lambda that provides CRUD o
 - **Application Layer**: Contains business logic, services, and use cases
 - **Infrastructure Layer**: Handles data persistence, external services, and configurations
 - **Functions Layer**: AWS Lambda handlers and API endpoints
+- **API Layer**: API endpoints
 
 ## Features
 
@@ -35,38 +131,6 @@ FieldBank is a serverless application built with AWS Lambda that provides CRUD o
 - ✅ **AWS Lambda**: Serverless deployment ready
 - ✅ **Local Testing**: AWS Lambda Test Tool integration
 - ✅ **Audit Fields**: Automatic tracking of Created/Modified dates and users
-
-## Quick Start
-
-### Prerequisites
-
-1. **.NET 8.0 SDK**
-2. **PostgreSQL** (running on localhost:5432)
-3. **AWS CLI** (for deployment)
-4. **AWS Lambda Test Tool** (for local testing)
-
-### Setup
-
-1. **Clone the repository**:
-   ```bash
-   git clone <repository-url>
-   cd FieldBank
-   ```
-
-2. **Build the project**:
-   ```bash
-   dotnet build
-   ```
-
-3. **Run database migrations**:
-   ```bash
-   dotnet ef database update --project src/FieldBank.Infrastructure --startup-project src/FieldBank.Functions
-   ```
-
-4. **Test locally**:
-   - Open `src/FieldBank.Functions/TestFunctions.cs` in VS Code/Cursor
-   - Press F5 and select "AWS Lambda Test Tool"
-   - Use the examples from the testing section below
 
 ## Available Functions
 
@@ -294,11 +358,6 @@ For production deployment, configure these environment variables:
 - **Alarms**: Set up alarms for error rates and performance
 - **Dashboards**: Create dashboards for monitoring
 
-### X-Ray Tracing
-
-- **Distributed Tracing**: Track requests across services
-- **Performance Analysis**: Identify bottlenecks
-- **Error Tracking**: Trace errors to their source
 
 ## Contributing
 
@@ -316,7 +375,3 @@ For production deployment, configure these environment variables:
 4. **Monitoring**: Set up comprehensive monitoring and alerting
 5. **CI/CD**: Implement automated deployment pipeline
 6. **Testing**: Add comprehensive unit and integration tests
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details. 

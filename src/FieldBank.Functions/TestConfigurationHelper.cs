@@ -21,7 +21,7 @@ public static class TestConfigurationHelper
     public static IServiceProvider CreateTestServiceProvider()
     {
         var services = new ServiceCollection();
-        
+
         // Initialize Serilog for console and file
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console()
@@ -66,4 +66,4 @@ public static class TestConfigurationHelper
         var serviceProvider = CreateTestServiceProvider();
         return serviceProvider.GetRequiredService<T>();
     }
-} 
+}

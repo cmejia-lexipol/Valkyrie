@@ -22,7 +22,7 @@ public class DeleteFieldCommandHandler : IRequestHandler<DeleteFieldCommand, Uni
             throw new InvalidOperationException($"Field with ID {request.Id} not found");
 
         await _fieldRepository.DeleteAsync(request.Id);
-        
+
         return Unit.Value;
     }
-} 
+}

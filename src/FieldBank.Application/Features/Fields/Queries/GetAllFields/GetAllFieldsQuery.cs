@@ -5,4 +5,4 @@ namespace FieldBank.Application.Features.Fields.Queries.GetAllFields;
 
 public record GetAllFieldsQuery : IRequest<IEnumerable<FieldDto>>
 {
-} 
+}

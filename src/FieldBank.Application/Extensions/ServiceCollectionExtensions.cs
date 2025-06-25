@@ -9,7 +9,7 @@ public static class ServiceCollectionExtensions
     {
         // Register AutoMapper
         services.AddAutoMapper(typeof(ServiceCollectionExtensions).Assembly);
-        
+
         return services;
     }
-} 
+}

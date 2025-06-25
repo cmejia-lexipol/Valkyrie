@@ -28,7 +28,7 @@ public class FieldRepository : IFieldRepository
 
         await _context.Fields.AddAsync(field);
         await _context.SaveChangesAsync();
-        
+
         return field;
     }
 
@@ -47,7 +47,7 @@ public class FieldRepository : IFieldRepository
 
         _context.Fields.Update(field);
         await _context.SaveChangesAsync();
-        
+
         return field;
     }
 
@@ -60,4 +60,4 @@ public class FieldRepository : IFieldRepository
             await _context.SaveChangesAsync();
         }
     }
-} 
+}

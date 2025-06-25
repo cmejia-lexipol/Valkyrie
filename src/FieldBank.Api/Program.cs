@@ -6,7 +6,6 @@ using FieldBank.Application.Features.Fields.Queries.GetFieldById;
 using FieldBank.Application.Features.Fields.Commands.CreateField;
 using FieldBank.Application.Features.Fields.Commands.UpdateField;
 using FieldBank.Application.Features.Fields.Commands.DeleteField;
-using Amazon.Lambda.AspNetCoreServer.Hosting;
 using Serilog;
 using Microsoft.AspNetCore.Diagnostics;
 

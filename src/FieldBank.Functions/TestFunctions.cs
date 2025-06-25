@@ -40,19 +40,19 @@ public class TestFunctions
 
                 case "create":
                     return await HandleCreate(
-                        request.Name ?? "Default Name", 
-                        request.Label ?? "Default Label", 
-                        request.Description, 
+                        request.Name ?? "Default Name",
+                        request.Label ?? "Default Label",
+                        request.Description,
                         context);
 
                 case "update":
                     if (!request.Id.HasValue)
                         return "ID is required for update operation";
                     return await HandleUpdate(
-                        request.Id.Value, 
-                        request.Name ?? "Default Name", 
-                        request.Label ?? "Default Label", 
-                        request.Description, 
+                        request.Id.Value,
+                        request.Name ?? "Default Name",
+                        request.Label ?? "Default Label",
+                        request.Description,
                         context);
 
                 case "delete":
@@ -93,7 +93,7 @@ public class TestFunctions
     {
         context.Logger.LogInformation($"Getting field with ID: {id}");
         var field = await _mediator.Send(new Application.Features.Fields.Queries.GetFieldById.GetFieldByIdQuery { Id = id });
-        
+
         if (field != null)
         {
             context.Logger.LogInformation($"Retrieved field: {field.Name}");
@@ -150,4 +150,4 @@ public class TestRequest
     public string? Name { get; set; }
     public string? Label { get; set; }
     public string? Description { get; set; }
-} 
+}

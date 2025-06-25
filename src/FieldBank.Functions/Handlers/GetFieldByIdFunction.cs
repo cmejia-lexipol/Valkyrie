@@ -57,7 +57,7 @@ public class GetFieldByIdFunction
             {
                 Id = request.Id
             });
-            
+
             if (field != null)
             {
                 context.Logger.LogInformation($"Retrieved field: {field.Name}");
@@ -85,4 +85,4 @@ public class GetFieldByIdFunction
 public class GetFieldByIdRequest
 {
     public int Id { get; set; }
-} 
+}

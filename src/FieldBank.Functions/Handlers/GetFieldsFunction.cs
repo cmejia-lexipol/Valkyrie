@@ -54,7 +54,7 @@ public class GetFieldsFunction
         {
             var fields = await _mediator.Send(new Application.Features.Fields.Queries.GetAllFields.GetAllFieldsQuery());
             context.Logger.LogInformation($"Retrieved {fields.Count()} fields");
-            
+
             return JsonSerializer.Serialize(fields);
         }
         catch (Exception ex)
@@ -63,4 +63,4 @@ public class GetFieldsFunction
             return $"Error: {ex.Message}";
         }
     }
-} 
+}

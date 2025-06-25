@@ -80,4 +80,4 @@ public class DeleteFieldFunction
 public class DeleteFieldRequest
 {
     public int Id { get; set; }
-} 
+}

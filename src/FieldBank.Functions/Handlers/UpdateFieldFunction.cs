@@ -60,7 +60,7 @@ public class UpdateFieldFunction
                 Label = request.Label,
                 Description = request.Description
             });
-            
+
             context.Logger.LogInformation($"Updated field: {field.Name}");
             return JsonSerializer.Serialize(field);
         }
@@ -88,4 +88,4 @@ public class UpdateFieldRequest
     public string Name { get; set; } = string.Empty;
     public string Label { get; set; } = string.Empty;
     public string? Description { get; set; }
-} 
+}

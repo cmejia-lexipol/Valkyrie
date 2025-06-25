@@ -38,4 +38,4 @@ public class UpdateFieldCommandHandler : IRequestHandler<UpdateFieldCommand, Fie
         var result = await _fieldRepository.UpdateAsync(existingField);
         return _mapper.Map<FieldDto>(result);
     }
-} 
+}

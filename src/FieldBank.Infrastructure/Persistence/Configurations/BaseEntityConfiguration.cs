@@ -23,4 +23,4 @@ public abstract class BaseEntityConfiguration<T> : IEntityTypeConfiguration<T> w
         builder.Property(e => e.ModifiedBy)
             .HasMaxLength(100);
     }
-} 
+}

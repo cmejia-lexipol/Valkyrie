@@ -25,4 +25,4 @@ public class GetFieldByIdQueryHandler : IRequestHandler<GetFieldByIdQuery, Field
         var field = await _fieldRepository.GetByIdAsync(request.Id);
         return field != null ? _mapper.Map<FieldDto>(field) : null;
     }
-} 
+}
