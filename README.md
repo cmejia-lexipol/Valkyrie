@@ -4,6 +4,31 @@ A .NET 8 AWS Lambda project implementing Clean Architecture principles for manag
 
 ---
 
+## Database Migrations
+
+To set up or update your local PostgreSQL database schema, run the following command:
+
+```bash
+dotnet ef database update --project src/FieldBank.Infrastructure --startup-project src/FieldBank.Functions
+```
+
+- This will apply the latest migrations to the database specified in your configuration.
+- Make sure your PostgreSQL server is running and accessible with the credentials in your `appsettings.json` or environment variables.
+
+---
+
+## Local Testing: Configuration Notes
+
+- **TestConfigurationHelper**
+  - If you want to run local tests using the Functions solution (e.g., with the AWS Lambda Test Tool), make sure to update the `TestConfigurationHelper` class to use the correct configuration and service setup for your environment.
+  - This is especially important if you change connection strings, database providers, or dependency injection setup for local testing.
+
+- **appsettings files**
+  - For local testing with the Functions solution, ensure that your `appsettings.json` (and optionally `appsettings.Development.json`) in `src/FieldBank.Functions` are up to date with the correct connection strings and settings for your local environment.
+  - The Functions solution will use these files when running locally, so any changes to database, logging, or other settings should be reflected here.
+
+---
+
 ## Why are there two solutions? (FieldBank.Api and FieldBank.Functions)
 
 ### FieldBank.Api
