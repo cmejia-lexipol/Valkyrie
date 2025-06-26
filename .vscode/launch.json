@@ -7,7 +7,7 @@
       "request": "launch",
       "program": "${env:USERPROFILE}/.dotnet/tools/dotnet-lambda-test-tool-8.0.exe",
       "args": ["--port", "5050"],
-      "cwd": "${workspaceFolder}/src/FieldBank.Functions",
+      "cwd": "${workspaceFolder}/src/Valkyrie.Functions",
       "console": "integratedTerminal",
       "stopAtEntry": false,
       "serverReadyAction": {
@@ -21,7 +21,7 @@
       "request": "launch",
       "program": "dotnet",
       "args": ["lambda-test-tool-8.0", "--port", "5050"],
-      "cwd": "${workspaceFolder}/src/FieldBank.Functions",
+      "cwd": "${workspaceFolder}/src/Valkyrie.Functions",
       "console": "integratedTerminal",
       "stopAtEntry": false,
       "serverReadyAction": {

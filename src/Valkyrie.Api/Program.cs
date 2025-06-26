@@ -11,25 +11,25 @@ using Microsoft.AspNetCore.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Inicializa Serilog desde la configuración
+// Initialize Serilog from configuration
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .CreateLogger();
 builder.Host.UseSerilog();
 
-// Para correr como Lambda HTTP API (opcional, si quieres probar en AWS Lambda)
+// To run as a Lambda HTTP API (optional, if you want to test in AWS Lambda)
 builder.Services.AddAWSLambdaHosting(LambdaEventSource.HttpApi);
 
-// DI y configuración de tu solución
+// DI and solution configuration
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-Log.Information("Cadena de conexión utilizada: {ConnectionString}", connectionString);
+Log.Information("Connection string in use: {ConnectionString}", connectionString);
 builder.Services.AddValkyrieDbContext(builder.Configuration);
 builder.Services.AddValkyrieInfrastructure();
 builder.Services.AddValkyrieApplicationServices();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateFieldCommand).Assembly));
 builder.Services.AddLogging();
 
-// Swagger para desarrollo
+// Swagger for development
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
