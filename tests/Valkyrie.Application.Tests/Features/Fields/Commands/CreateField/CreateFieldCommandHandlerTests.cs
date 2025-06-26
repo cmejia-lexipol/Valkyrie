@@ -31,8 +31,8 @@ public class CreateFieldCommandHandlerTests
             Description = "Test Description"
         };
 
-        var fieldEntity = new Field { Id = 1, Name = command.Name, Label = command.Label, Description = command.Description };
-        var fieldDto = new FieldDto { Id = 1, Name = command.Name, Label = command.Label, Description = command.Description };
+        var fieldEntity = new Field { FieldId = 1, Name = command.Name, Label = command.Label, Description = command.Description };
+        var fieldDto = new FieldDto { FieldId = 1, Name = command.Name, Label = command.Label, Description = command.Description };
 
         mockMapper.Setup(m => m.Map<Field>(command)).Returns(fieldEntity);
         mockRepo.Setup(r => r.CreateAsync(fieldEntity)).ReturnsAsync(fieldEntity);
@@ -45,7 +45,7 @@ public class CreateFieldCommandHandlerTests
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(fieldDto.Id, result.Id);
+        Assert.Equal(fieldDto.FieldId, result.FieldId);
         Assert.Equal(fieldDto.Name, result.Name);
         Assert.Equal(fieldDto.Label, result.Label);
         Assert.Equal(fieldDto.Description, result.Description);

@@ -5,10 +5,10 @@ namespace Valkyrie.Infrastructure.Repositories;
 
 public class Repository<T> : IRepository<T> where T : class
 {
-    private readonly ValkyrieDbContext _context;
+    private readonly ValkyrieDBContext _context;
     private readonly DbSet<T> _dbSet;
 
-    public Repository(ValkyrieDbContext context)
+    public Repository(ValkyrieDBContext context)
     {
         _context = context;
         _dbSet = context.Set<T>();

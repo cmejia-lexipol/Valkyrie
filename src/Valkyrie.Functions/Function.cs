@@ -64,10 +64,11 @@ public class Function
                     {
                         Name = request.Name ?? "Default Name",
                         Label = request.Label ?? "Default Label",
-                        Description = request.Description
+                        Description = request.Description,
+                        CategoryId = request.CategoryId ?? 0
                     });
 
-                    context.Logger.LogInformation($"Created field with ID: {createdField.Id}");
+                    context.Logger.LogInformation($"Created field with ID: {createdField.FieldId}");
                     return JsonSerializer.Serialize(createdField);
 
                 case "get":
@@ -102,7 +103,8 @@ public class Function
                             Id = request.Id.Value,
                             Name = request.Name ?? "Default Name",
                             Label = request.Label ?? "Default Label",
-                            Description = request.Description
+                            Description = request.Description,
+                            CategoryId = request.CategoryId ?? 0
                         });
 
                         context.Logger.LogInformation($"Updated field: {updatedField.Name}");
@@ -152,4 +154,5 @@ public class FieldRequest
     public string? Name { get; set; }
     public string? Label { get; set; }
     public string? Description { get; set; }
+    public int? CategoryId { get; set; }
 }

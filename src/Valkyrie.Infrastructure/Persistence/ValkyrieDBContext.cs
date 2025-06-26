@@ -3,20 +3,21 @@ using Valkyrie.Domain.Entities;
 
 namespace Valkyrie.Infrastructure.Persistence;
 
-public class ValkyrieDbContext : DbContext
+public class ValkyrieDBContext : DbContext
 {
-    public ValkyrieDbContext(DbContextOptions<ValkyrieDbContext> options)
+    public ValkyrieDBContext(DbContextOptions<ValkyrieDBContext> options)
         : base(options)
     {
     }
 
     public DbSet<Field> Fields { get; set; }
+    public DbSet<Category> Categories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
         // Apply all configurations from the current assembly
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ValkyrieDbContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ValkyrieDBContext).Assembly);
     }
 }

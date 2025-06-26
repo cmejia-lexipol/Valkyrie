@@ -14,9 +14,9 @@ public static class ServiceCollectionExtensions
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-        services.AddDbContext<ValkyrieDbContext>(options =>
+        services.AddDbContext<ValkyrieDBContext>(options =>
             options.UseNpgsql(connectionString, npgsql =>
-                npgsql.MigrationsAssembly(typeof(ValkyrieDbContext).Assembly.FullName)
+                npgsql.MigrationsAssembly(typeof(ValkyrieDBContext).Assembly.FullName)
             ));
 
         return services;
@@ -29,6 +29,7 @@ public static class ServiceCollectionExtensions
 
         // Specific repositories
         services.AddScoped<IFieldRepository, FieldRepository>();
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
 
         return services;
     }

@@ -32,9 +32,9 @@ public class GetFieldsFunctionTests
         // Arrange
         var expectedFields = new List<FieldDto>
             {
-                new FieldDto { Id = 1, Name = "Field1", Label = "Label1", Description = "Description1" },
-                new FieldDto { Id = 2, Name = "Field2", Label = "Label2", Description = "Description2" },
-                new FieldDto { Id = 3, Name = "Field3", Label = "Label3", Description = "Description3" }
+                new FieldDto { FieldId = 1, Name = "Field1", Label = "Label1", Description = "Description1" },
+                new FieldDto { FieldId = 2, Name = "Field2", Label = "Label2", Description = "Description2" },
+                new FieldDto { FieldId = 3, Name = "Field3", Label = "Label3", Description = "Description3" }
             };
 
         _mockMediator

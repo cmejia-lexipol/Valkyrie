@@ -53,7 +53,16 @@ public static class TestConfigurationHelper
             loggingBuilder.AddSerilog(Log.Logger, dispose: true);
         });
 
-        return services.BuildServiceProvider();
+        var provider = services.BuildServiceProvider();
+
+        // Seed the database
+        using (var scope = provider.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<Valkyrie.Infrastructure.Persistence.ValkyrieDBContext>();
+            Valkyrie.Infrastructure.Persistence.SeedData.Seed(db);
+        }
+
+        return provider;
     }
 
     /// <summary>

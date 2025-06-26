@@ -5,9 +5,9 @@ using System.IO;
 
 namespace Valkyrie.Infrastructure.Persistence;
 
-public class ValkyrieDbContextFactory : IDesignTimeDbContextFactory<ValkyrieDbContext>
+public class ValkyrieDbContextFactory : IDesignTimeDbContextFactory<ValkyrieDBContext>
 {
-    public ValkyrieDbContext CreateDbContext(string[] args)
+    public ValkyrieDBContext CreateDbContext(string[] args)
     {
         // Looks for appsettings.json in the Functions project
         var functionsProjectPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "Valkyrie.Functions");
@@ -18,12 +18,12 @@ public class ValkyrieDbContextFactory : IDesignTimeDbContextFactory<ValkyrieDbCo
             .AddEnvironmentVariables()
             .Build();
 
-        var optionsBuilder = new DbContextOptionsBuilder<ValkyrieDbContext>();
+        var optionsBuilder = new DbContextOptionsBuilder<ValkyrieDBContext>();
 
         var connectionString = configuration.GetConnectionString("DefaultConnection");
 
         optionsBuilder.UseNpgsql(connectionString);
 
-        return new ValkyrieDbContext(optionsBuilder.Options);
+        return new ValkyrieDBContext(optionsBuilder.Options);
     }
 }

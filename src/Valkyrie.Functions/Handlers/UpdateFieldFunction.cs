@@ -58,7 +58,8 @@ public class UpdateFieldFunction
                 Id = request.Id,
                 Name = request.Name,
                 Label = request.Label,
-                Description = request.Description
+                Description = request.Description,
+                CategoryId = request.CategoryId
             });
 
             context.Logger.LogInformation($"Updated field: {field.Name}");
@@ -88,4 +89,5 @@ public class UpdateFieldRequest
     public string Name { get; set; } = string.Empty;
     public string Label { get; set; } = string.Empty;
     public string? Description { get; set; }
+    public int CategoryId { get; set; }
 }

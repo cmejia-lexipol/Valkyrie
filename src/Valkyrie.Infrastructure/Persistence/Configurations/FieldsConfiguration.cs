@@ -12,7 +12,7 @@ public class FieldsConfiguration : BaseEntityConfiguration<Field>
 
         builder.ToTable("Fields");
 
-        builder.HasKey(f => f.Id);
+        builder.HasKey(f => f.FieldId);
 
         builder.Property(f => f.Name)
             .IsRequired()

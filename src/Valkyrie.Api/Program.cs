@@ -1,13 +1,14 @@
-using Valkyrie.Infrastructure.Extensions;
-using Valkyrie.Application.Extensions;
 using MediatR;
+using Microsoft.AspNetCore.Diagnostics;
+using Serilog;
+using Valkyrie.Application.Extensions;
+using Valkyrie.Application.Features.Fields.Commands.CreateField;
+using Valkyrie.Application.Features.Fields.Commands.DeleteField;
+using Valkyrie.Application.Features.Fields.Commands.UpdateField;
 using Valkyrie.Application.Features.Fields.Queries.GetAllFields;
 using Valkyrie.Application.Features.Fields.Queries.GetFieldById;
-using Valkyrie.Application.Features.Fields.Commands.CreateField;
-using Valkyrie.Application.Features.Fields.Commands.UpdateField;
-using Valkyrie.Application.Features.Fields.Commands.DeleteField;
-using Serilog;
-using Microsoft.AspNetCore.Diagnostics;
+using Valkyrie.Infrastructure.Extensions;
+using Valkyrie.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +51,12 @@ app.UseExceptionHandler(errorApp =>
     });
 });
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ValkyrieDBContext>();
+    SeedData.Seed(db);
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -77,13 +84,17 @@ app.MapGet("/fields/{id:int}", async (int id, IMediator mediator) =>
 // CREATE
 app.MapPost("/fields", async (CreateFieldCommand command, IMediator mediator) =>
 {
+    if (command.CategoryId <= 0)
+        return Results.BadRequest("CategoryId is required");
     var field = await mediator.Send(command);
-    return Results.Created($"/fields/{field.Id}", field);
+    return Results.Created($"/fields/{field.FieldId}", field);
 });
 
 // UPDATE
 app.MapPut("/fields/{id:int}", async (int id, UpdateFieldCommand command, IMediator mediator) =>
 {
+    if (command.CategoryId <= 0)
+        return Results.BadRequest("CategoryId is required");
     var updateCommand = command with { Id = id };
     var field = await mediator.Send(updateCommand);
     return Results.Ok(field);
@@ -94,6 +105,13 @@ app.MapDelete("/fields/{id:int}", async (int id, IMediator mediator) =>
 {
     await mediator.Send(new DeleteFieldCommand { Id = id });
     return Results.NoContent();
+});
+
+// GET ALL CATEGORIES
+app.MapGet("/categories", async (IMediator mediator) =>
+{
+    var categories = await mediator.Send(new Valkyrie.Application.Features.Categories.Queries.GetAllCategories.GetAllCategoriesQuery());
+    return Results.Ok(categories);
 });
 
 app.Run();

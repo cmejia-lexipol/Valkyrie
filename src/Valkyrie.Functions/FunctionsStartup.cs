@@ -64,6 +64,16 @@ public static class FunctionsStartup
                 services.AddSingleton<ICacheService, RedisCacheService>();
                 services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Application.Features.Fields.Commands.CreateField.CreateFieldCommand).Assembly));
                 services.AddLogging();
+            })
+            .ConfigureAppConfiguration((context, config) => { })
+            .ConfigureHostConfiguration((config) => { })
+            .ConfigureServices((context, services) =>
+            {
+                // Seed the database after building the host
+                var sp = services.BuildServiceProvider();
+                using var scope = sp.CreateScope();
+                var db = scope.ServiceProvider.GetRequiredService<Valkyrie.Infrastructure.Persistence.ValkyrieDBContext>();
+                Valkyrie.Infrastructure.Persistence.SeedData.Seed(db);
             });
     }
 }

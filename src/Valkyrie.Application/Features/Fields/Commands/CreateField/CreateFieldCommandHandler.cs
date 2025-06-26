@@ -43,7 +43,7 @@ public class CreateFieldCommandHandler : IRequestHandler<CreateFieldCommand, Fie
             _logger.LogDebug("Mapped command to field entity: {@FieldEntity}", field);
 
             var result = await _fieldRepository.CreateAsync(field);
-            _logger.LogInformation("Successfully created field with ID: {FieldId}", result.Id);
+            _logger.LogInformation("Successfully created field with ID: {FieldId}", result.FieldId);
             
             var dto = _mapper.Map<FieldDto>(result);
             _logger.LogDebug("Mapped field entity to DTO: {@FieldDto}", dto);

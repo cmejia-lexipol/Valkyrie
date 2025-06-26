@@ -27,7 +27,7 @@ public class GetFieldByIdFunctionTests
     public async Task FunctionHandler_WithValidId_ReturnsFieldAsJson()
     {
         // Arrange
-        var expectedField = new FieldDto { Id = 1, Name = "Field1", Label = "Label1", Description = "Desc1" };
+        var expectedField = new FieldDto { FieldId = 1, Name = "Field1", Label = "Label1", Description = "Desc1" };
         _mockMediator.Setup(m => m.Send(It.IsAny<GetFieldByIdQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(expectedField);
         var request = new GetFieldByIdRequest { Id = 1 };
 

@@ -213,7 +213,7 @@ For local testing, use the `TestFunctions` class that handles all operations thr
 ```json
 {
   "Operation": "getbyid",
-  "Id": 1
+  "FieldId": 1
 }
 ```
 
@@ -223,7 +223,8 @@ For local testing, use the `TestFunctions` class that handles all operations thr
   "Operation": "create",
   "Name": "email",
   "Label": "Email Address",
-  "Description": "User's email address"
+  "Description": "User's email address",
+  "CategoryId": 1
 }
 ```
 
@@ -231,10 +232,11 @@ For local testing, use the `TestFunctions` class that handles all operations thr
 ```json
 {
   "Operation": "update",
-  "Id": 1,
+  "FieldId": 1,
   "Name": "email_updated",
   "Label": "Email Address Updated",
-  "Description": "Updated email address field"
+  "Description": "Updated email address field",
+  "CategoryId": 2
 }
 ```
 
@@ -242,7 +244,7 @@ For local testing, use the `TestFunctions` class that handles all operations thr
 ```json
 {
   "Operation": "delete",
-  "Id": 1
+  "FieldId": 1
 }
 ```
 

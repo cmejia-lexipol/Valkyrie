@@ -35,8 +35,8 @@ public class FunctionTests
         // Arrange
         var expectedFields = new List<FieldDto>
             {
-                new FieldDto { Id = 1, Name = "Field1", Label = "Label1", Description = "Desc1" },
-                new FieldDto { Id = 2, Name = "Field2", Label = "Label2", Description = "Desc2" }
+                new FieldDto { FieldId = 1, Name = "Field1", Label = "Label1", Description = "Desc1" },
+                new FieldDto { FieldId = 2, Name = "Field2", Label = "Label2", Description = "Desc2" }
             };
 
         _mockMediator
@@ -60,7 +60,7 @@ public class FunctionTests
     public async Task FunctionHandler_Get_WithValidId_ReturnsFieldAsJson()
     {
         // Arrange
-        var expectedField = new FieldDto { Id = 1, Name = "Test Field", Label = "Test Label", Description = "Test Description" };
+        var expectedField = new FieldDto { FieldId = 1, Name = "Test Field", Label = "Test Label", Description = "Test Description" };
 
         _mockMediator
             .Setup(m => m.Send(It.IsAny<GetFieldByIdQuery>(), It.IsAny<CancellationToken>()))
@@ -111,7 +111,7 @@ public class FunctionTests
     public async Task FunctionHandler_Create_WithValidData_ReturnsCreatedFieldAsJson()
     {
         // Arrange
-        var expectedField = new FieldDto { Id = 1, Name = "New Field", Label = "New Label", Description = "New Description" };
+        var expectedField = new FieldDto { FieldId = 1, Name = "New Field", Label = "New Label", Description = "New Description" };
 
         _mockMediator
             .Setup(m => m.Send(It.IsAny<CreateFieldCommand>(), It.IsAny<CancellationToken>()))
@@ -138,7 +138,7 @@ public class FunctionTests
     public async Task FunctionHandler_Create_WithNullName_UsesDefaultName()
     {
         // Arrange
-        var expectedField = new FieldDto { Id = 1, Name = "Default Name", Label = "Test Label" };
+        var expectedField = new FieldDto { FieldId = 1, Name = "Default Name", Label = "Test Label" };
 
         _mockMediator
             .Setup(m => m.Send(It.IsAny<CreateFieldCommand>(), It.IsAny<CancellationToken>()))
@@ -163,7 +163,7 @@ public class FunctionTests
     public async Task FunctionHandler_Update_WithValidData_ReturnsUpdatedFieldAsJson()
     {
         // Arrange
-        var expectedField = new FieldDto { Id = 1, Name = "Updated Field", Label = "Updated Label", Description = "Updated Description" };
+        var expectedField = new FieldDto { FieldId = 1, Name = "Updated Field", Label = "Updated Label", Description = "Updated Description" };
 
         _mockMediator
             .Setup(m => m.Send(It.IsAny<UpdateFieldCommand>(), It.IsAny<CancellationToken>()))

@@ -7,9 +7,9 @@ namespace Valkyrie.Infrastructure.Repositories;
 
 public class FieldRepository : IFieldRepository
 {
-    private readonly ValkyrieDbContext _context;
+    private readonly ValkyrieDBContext _context;
 
-    public FieldRepository(ValkyrieDbContext context)
+    public FieldRepository(ValkyrieDBContext context)
     {
         _context = context;
     }
@@ -17,7 +17,8 @@ public class FieldRepository : IFieldRepository
     public async Task<Field?> GetByIdAsync(int id)
     {
         return await _context.Fields
-            .FirstOrDefaultAsync(f => f.Id == id);
+            .Include(f => f.Category)
+            .FirstOrDefaultAsync(f => f.FieldId == id);
     }
 
     public async Task<Field> CreateAsync(Field field)
@@ -35,6 +36,7 @@ public class FieldRepository : IFieldRepository
     public async Task<IEnumerable<Field>> GetAllAsync()
     {
         return await _context.Fields
+            .Include(f => f.Category)
             .OrderBy(f => f.Name)
             .ToListAsync();
     }

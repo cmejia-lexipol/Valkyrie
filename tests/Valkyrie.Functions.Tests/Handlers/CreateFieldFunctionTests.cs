@@ -32,7 +32,7 @@ public class CreateFieldFunctionTests
         // Arrange
         var expectedField = new FieldDto
         {
-            Id = 1,
+            FieldId = 1,
             Name = "New Field",
             Label = "New Label",
             Description = "New Description"
@@ -65,7 +65,7 @@ public class CreateFieldFunctionTests
         // Arrange
         var expectedField = new FieldDto
         {
-            Id = 1,
+            FieldId = 1,
             Name = "Test Field",
             Label = "Test Label",
             Description = null
@@ -97,7 +97,7 @@ public class CreateFieldFunctionTests
         // Arrange
         var expectedField = new FieldDto
         {
-            Id = 1,
+            FieldId = 1,
             Name = "Test Field",
             Label = "Test Label",
             Description = ""

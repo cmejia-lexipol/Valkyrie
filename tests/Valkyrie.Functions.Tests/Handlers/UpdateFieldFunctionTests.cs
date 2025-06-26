@@ -27,7 +27,7 @@ public class UpdateFieldFunctionTests
     public async Task FunctionHandler_WithValidData_ReturnsUpdatedFieldAsJson()
     {
         // Arrange
-        var expectedField = new FieldDto { Id = 1, Name = "Updated Field", Label = "Updated Label", Description = "Updated Desc" };
+        var expectedField = new FieldDto { FieldId = 1, Name = "Updated Field", Label = "Updated Label", Description = "Updated Desc" };
         var request = new UpdateFieldRequest { Id = 1, Name = "Updated Field", Label = "Updated Label", Description = "Updated Desc" };
         _mockMediator.Setup(m => m.Send(It.IsAny<UpdateFieldCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync(expectedField);
 

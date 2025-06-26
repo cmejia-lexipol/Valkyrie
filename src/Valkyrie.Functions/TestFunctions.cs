@@ -115,7 +115,7 @@ public class TestFunctions
             Label = label,
             Description = description
         });
-        context.Logger.LogInformation($"Created field with ID: {field.Id}");
+        context.Logger.LogInformation($"Created field with ID: {field.FieldId}");
         return JsonSerializer.Serialize(field);
     }
 

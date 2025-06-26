@@ -58,10 +58,11 @@ public class CreateFieldFunction
             {
                 Name = request.Name,
                 Label = request.Label,
-                Description = request.Description
+                Description = request.Description,
+                CategoryId = request.CategoryId
             });
 
-            context.Logger.LogInformation($"Created field with ID: {field.Id}");
+            context.Logger.LogInformation($"Created field with ID: {field.FieldId}");
             return JsonSerializer.Serialize(field);
         }
         catch (ArgumentException ex)
@@ -82,4 +83,5 @@ public class CreateFieldRequest
     public string Name { get; set; } = string.Empty;
     public string Label { get; set; } = string.Empty;
     public string? Description { get; set; }
+    public int CategoryId { get; set; }
 }
