@@ -1,4 +1,4 @@
-# FieldBank - AWS Lambda Clean Architecture Project
+# Valkyrie - AWS Lambda Clean Architecture Project
 
 A .NET 8 AWS Lambda project implementing Clean Architecture principles for managing Field entities with PostgreSQL database.
 
@@ -9,7 +9,7 @@ A .NET 8 AWS Lambda project implementing Clean Architecture principles for manag
 To set up or update your local PostgreSQL database schema, run the following command:
 
 ```bash
-dotnet ef database update --project src/FieldBank.Infrastructure --startup-project src/FieldBank.Functions
+dotnet ef database update --project src/Valkyrie.Infrastructure --startup-project src/Valkyrie.Functions
 ```
 
 - This will apply the latest migrations to the database specified in your configuration.
@@ -24,20 +24,20 @@ dotnet ef database update --project src/FieldBank.Infrastructure --startup-proje
   - This is especially important if you change connection strings, database providers, or dependency injection setup for local testing.
 
 - **appsettings files**
-  - For local testing with the Functions solution, ensure that your `appsettings.json` (and optionally `appsettings.Development.json`) in `src/FieldBank.Functions` are up to date with the correct connection strings and settings for your local environment.
+  - For local testing with the Functions solution, ensure that your `appsettings.json` (and optionally `appsettings.Development.json`) in `src/Valkyrie.Functions` are up to date with the correct connection strings and settings for your local environment.
   - The Functions solution will use these files when running locally, so any changes to database, logging, or other settings should be reflected here.
 
 ---
 
-## Why are there two solutions? (FieldBank.Api and FieldBank.Functions)
+## Why are there two solutions? (Valkyrie.Api and Valkyrie.Functions)
 
-### FieldBank.Api
+### Valkyrie.Api
 - **Traditional ASP.NET Core Minimal API**
 - Exposes HTTP endpoints directly, ideal for local development and quick testing.
 - Easily test the API using Swagger.
 - **Typical deployment:** Container, EC2, ECS, App Service, or Lambda with an adapter.
 
-### FieldBank.Functions
+### Valkyrie.Functions
 - **Serverless solution for AWS Lambda**
 - Each operation (get, create, update, delete, etc.) can be an independent Lambda (Handlers) or a unified Lambda for testing (Function.cs, TestFunctions.cs).
 - **Typical deployment:** AWS Lambda, integrated with API Gateway.
@@ -46,21 +46,21 @@ dotnet ef database update --project src/FieldBank.Infrastructure --startup-proje
 
 ## How to test each solution?
 
-### FieldBank.Api (Traditional API with Swagger)
+### Valkyrie.Api (Traditional API with Swagger)
 
 - **Purpose:**  
   Expose and test the API in a traditional way, with REST endpoints and interactive documentation.
 
 - **How to start:**
   - **Visual Studio:**
-    1. Right-click the `FieldBank.Api` project
+    1. Right-click the `Valkyrie.Api` project
     2. Select "Set as Startup Project"
     3. Press F5 or "Start Debugging"
   - **VS Code:**
     1. Open the project folder
     2. Run:
        ```bash
-       dotnet run --project src/FieldBank.Api
+       dotnet run --project src/Valkyrie.Api
        ```
     3. Open your browser at [http://localhost:5024/swagger](http://localhost:5024/swagger) (or the port shown in the console)
 
@@ -69,7 +69,7 @@ dotnet ef database update --project src/FieldBank.Infrastructure --startup-proje
 
 ---
 
-### FieldBank.Functions (AWS Lambda)
+### Valkyrie.Functions (AWS Lambda)
 
 - **Purpose:**  
   Test and deploy your logic as Lambda functions, either one function per operation or a unified function for testing.
@@ -81,7 +81,7 @@ dotnet ef database update --project src/FieldBank.Infrastructure --startup-proje
 
 - **How to test:**
   - **Visual Studio:**
-    1. Right-click the `FieldBank.Functions` project
+    1. Right-click the `Valkyrie.Functions` project
     2. Select "Debug" → "Start New Instance"
     3. Choose "AWS Lambda Test Tool" as the launch profile
     4. Use the Test Tool panel to send test requests (see examples in the README)
@@ -107,13 +107,13 @@ dotnet ef database update --project src/FieldBank.Infrastructure --startup-proje
 
 ## Quick Start (Summary of how to run and test)
 
-### FieldBank.Api (Swagger)
-- **Visual Studio:** F5 on `FieldBank.Api`
-- **VS Code:** `dotnet run --project src/FieldBank.Api`
+### Valkyrie.Api (Swagger)
+- **Visual Studio:** F5 on `Valkyrie.Api`
+- **VS Code:** `dotnet run --project src/Valkyrie.Api`
 - **Go to:** `/swagger`
 
-### FieldBank.Functions (Lambda)
-- **Visual Studio:** F5 on `FieldBank.Functions` with the "AWS Lambda Test Tool" profile
+### Valkyrie.Functions (Lambda)
+- **Visual Studio:** F5 on `Valkyrie.Functions` with the "AWS Lambda Test Tool" profile
 - **VS Code:**
   - Install the test tool
   - `dotnet lambda test-tool-8.0`
@@ -123,18 +123,18 @@ dotnet ef database update --project src/FieldBank.Infrastructure --startup-proje
 
 ## Project Overview
 
-FieldBank is a serverless application built with AWS Lambda that provides CRUD operations for Field entities. The project follows Clean Architecture principles to ensure maintainability, testability, and scalability.
+Valkyrie is a serverless application built with AWS Lambda that provides CRUD operations for Field entities. The project follows Clean Architecture principles to ensure maintainability, testability, and scalability.
 
 ## Architecture
 
 ```
-└─ FieldBank/
+└─ Valkyrie/
     ├─ src/
-    │   ├─ FieldBank.Domain/           ← Entities, Interfaces, Business Rules
-    │   ├─ FieldBank.Application/      ← Business Logic, Services
-    │   ├─ FieldBank.Infrastructure/   ← Data Access, External Services
-    │   └─ FieldBank.Functions/        ← AWS Lambda Handlers
-    │   └─ FieldBank.Api/              ← API Endpoints
+    │   ├─ Valkyrie.Domain/           ← Entities, Interfaces, Business Rules
+    │   ├─ Valkyrie.Application/      ← Business Logic, Services
+    │   ├─ Valkyrie.Infrastructure/   ← Data Access, External Services
+    │   └─ Valkyrie.Functions/        ← AWS Lambda Handlers
+    │   └─ Valkyrie.Api/              ← API Endpoints
     └─ tests/                          ← Unit and Integration Tests
 ```
 
@@ -179,24 +179,24 @@ For local testing, use the `TestFunctions` class that handles all operations thr
 
 1. **Build the project first**:
    ```bash
-   dotnet build src/FieldBank.Functions --configuration Debug
+   dotnet build src/Valkyrie.Functions --configuration Debug
    ```
 
 2. **Verify PostgreSQL is running** on localhost:5432
 
-3. **Ensure the `FieldBank` database exists**
+3. **Ensure the `Valkyrie` database exists**
 
 ### Opening AWS Lambda Test Tool
 
 #### In VS Code/Cursor:
 1. Open VS Code/Cursor
-2. Navigate to `src/FieldBank.Functions/TestFunctions.cs`
+2. Navigate to `src/Valkyrie.Functions/TestFunctions.cs`
 3. Press F5 or use "Run and Debug" command
 4. Select "AWS Lambda Test Tool"
 
 #### In Visual Studio:
 1. Open Visual Studio
-2. Right-click on the `FieldBank.Functions` project
+2. Right-click on the `Valkyrie.Functions` project
 3. Select "Debug" → "Start New Instance"
 4. Select "AWS Lambda Test Tool"
 
@@ -251,13 +251,13 @@ For local testing, use the `TestFunctions` class that handles all operations thr
 
 ### Common Issues
 
-#### ❌ Error: "Failed to find type FieldBank.Functions.TestFunctions"
+#### ❌ Error: "Failed to find type Valkyrie.Functions.TestFunctions"
 
 **Cause**: The AWS Lambda Test Tool cannot find the compiled class.
 
 **Solution**:
-1. Build the project first: `dotnet build src/FieldBank.Functions --configuration Debug`
-2. Verify the DLL file exists: `src/FieldBank.Functions/bin/Debug/net8.0/FieldBank.Functions.dll`
+1. Build the project first: `dotnet build src/Valkyrie.Functions --configuration Debug`
+2. Verify the DLL file exists: `src/Valkyrie.Functions/bin/Debug/net8.0/Valkyrie.Functions.dll`
 3. Restart VS Code/Cursor after building
 
 #### ❌ Error: "ConnectionString property has not been initialized"
@@ -266,7 +266,7 @@ For local testing, use the `TestFunctions` class that handles all operations thr
 
 **Solution**:
 - Ensure PostgreSQL is running on localhost:5432
-- Verify the `FieldBank` database exists
+- Verify the `Valkyrie` database exists
 - Confirm the `postgres` user with password `password` has access
 
 #### ❌ Error: "No parameterless constructor"
@@ -296,7 +296,7 @@ For local testing, use the `TestFunctions` class that handles all operations thr
 
 2. **Deploy individual functions**:
    ```bash
-   cd src/FieldBank.Functions
+   cd src/Valkyrie.Functions
    dotnet lambda deploy-function GetFieldsFunction
    dotnet lambda deploy-function CreateFieldFunction
    # ... deploy other functions
@@ -304,7 +304,7 @@ For local testing, use the `TestFunctions` class that handles all operations thr
 
 ### Using Visual Studio
 
-1. Right-click on the `FieldBank.Functions` project
+1. Right-click on the `Valkyrie.Functions` project
 2. Select "Publish to AWS Lambda"
 3. Configure function settings and deploy
 
@@ -315,7 +315,7 @@ For local testing, use the `TestFunctions` class that handles all operations thr
 The application uses PostgreSQL with the following default configuration:
 - **Host**: localhost
 - **Port**: 5432
-- **Database**: FieldBank
+- **Database**: Valkyrie
 - **Username**: postgres
 - **Password**: password
 
@@ -328,24 +328,24 @@ For production deployment, configure these environment variables:
 
 ## Project Structure
 
-### Domain Layer (`FieldBank.Domain`)
+### Domain Layer (`Valkyrie.Domain`)
 
 - **Entities**: Business objects (Field, BaseEntity)
 - **Interfaces**: Repository contracts (IFieldRepository)
 
-### Application Layer (`FieldBank.Application`)
+### Application Layer (`Valkyrie.Application`)
 
 - **Services**: Business logic services (IFieldService, FieldService)
 - **Extensions**: DI registration extensions
 
-### Infrastructure Layer (`FieldBank.Infrastructure`)
+### Infrastructure Layer (`Valkyrie.Infrastructure`)
 
 - **Persistence**: Entity Framework configuration and DbContext
 - **Repositories**: Data access implementations
 - **Caching**: Redis cache service (if needed)
 - **Migrations**: Database schema migrations
 
-### Functions Layer (`FieldBank.Functions`)
+### Functions Layer (`Valkyrie.Functions`)
 
 - **Handlers**: Individual Lambda function handlers
 - **Startup**: Generic Host configuration
