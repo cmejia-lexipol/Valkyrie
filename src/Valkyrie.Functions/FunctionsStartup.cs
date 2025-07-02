@@ -6,6 +6,7 @@ using Valkyrie.Application.Extensions;
 using Valkyrie.Infrastructure.Caching;
 using MediatR;
 using Serilog;
+using Microsoft.Extensions.Configuration;
 
 namespace Valkyrie.Functions;
 
@@ -15,16 +16,10 @@ namespace Valkyrie.Functions;
 /// </summary>
 public static class FunctionsStartup
 {
-    public static IHostBuilder ConfigureServices(this IHostBuilder builder)
+
+    public static IHost BuildHost()
     {
-        // Early startup log (optional)
-        Log.Logger = new LoggerConfiguration()
-            .WriteTo.Console()
-            .CreateLogger();
-
-        Log.Information("Serilog is working in startup!");
-
-        return builder
+        return new HostBuilder()
             .UseSerilog((context, services, configuration) =>
             {
                 var environment = context.HostingEnvironment.EnvironmentName;
@@ -56,6 +51,11 @@ public static class FunctionsStartup
                         outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}");
                 }
             })
+            .ConfigureAppConfiguration((context, config) =>
+            {
+                config.AddJsonFile("appsettings.json", optional: true)
+                      .AddEnvironmentVariables();
+            })
             .ConfigureServices((context, services) =>
             {
                 services.AddValkyrieDbContext(context.Configuration);
@@ -74,7 +74,8 @@ public static class FunctionsStartup
                 using var scope = sp.CreateScope();
                 var db = scope.ServiceProvider.GetRequiredService<Valkyrie.Infrastructure.Persistence.ValkyrieDBContext>();
                 Valkyrie.Infrastructure.Persistence.SeedData.Seed(db);
-            });
+            })
+            .Build();
     }
 }
 

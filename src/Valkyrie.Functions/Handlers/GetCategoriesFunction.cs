@@ -1,11 +1,7 @@
 using Amazon.Lambda.Core;
 using MediatR;
 using System.Text.Json;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Valkyrie.Infrastructure.Extensions;
-using Valkyrie.Application.Extensions;
 
 namespace Valkyrie.Functions.Handlers;
 
@@ -22,22 +18,7 @@ public class GetCategoriesFunction
     // Parameterless constructor for AWS Lambda (production)
     public GetCategoriesFunction()
     {
-        var host = new HostBuilder()
-            .ConfigureAppConfiguration((context, config) =>
-            {
-                config.AddJsonFile("appsettings.json", optional: true)
-                      .AddEnvironmentVariables();
-            })
-            .ConfigureServices((context, services) =>
-            {
-                services.AddValkyrieDbContext(context.Configuration);
-                services.AddValkyrieInfrastructure();
-                services.AddValkyrieApplicationServices();
-                services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Application.Features.Categories.Commands.CreateCategory.CreateCategoryCommand).Assembly));
-                services.AddLogging();
-            })
-            .Build();
-
+        var host = FunctionsStartup.BuildHost();
         _mediator = host.Services.GetRequiredService<IMediator>();
     }
 
