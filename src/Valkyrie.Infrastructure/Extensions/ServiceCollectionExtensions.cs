@@ -30,6 +30,7 @@ public static class ServiceCollectionExtensions
         // Specific repositories
         services.AddScoped<IFieldRepository, FieldRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
+        services.AddScoped<IFieldTypeRepository, FieldTypeRepository>();
 
         return services;
     }

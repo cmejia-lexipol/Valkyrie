@@ -39,5 +39,10 @@ public class FieldsConfiguration : BaseEntityConfiguration<Field>
 
         builder.Property(f => f.ModifiedBy)
             .HasMaxLength(100);
+
+        builder.HasOne(f => f.FieldType)
+            .WithMany()
+            .HasForeignKey(f => f.FieldTypeId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

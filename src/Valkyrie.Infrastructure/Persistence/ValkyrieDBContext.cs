@@ -12,6 +12,7 @@ public class ValkyrieDBContext : DbContext
 
     public DbSet<Field> Fields { get; set; }
     public DbSet<Category> Categories { get; set; }
+    public DbSet<FieldType> FieldTypes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

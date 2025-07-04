@@ -1,5 +1,5 @@
 using Valkyrie.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
+using Valkyrie.Domain.Enums;
 
 namespace Valkyrie.Infrastructure.Persistence;
 

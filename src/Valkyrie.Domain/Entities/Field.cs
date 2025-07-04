@@ -9,5 +9,8 @@ public class Field : BaseEntity
 
     public int CategoryId { get; set; }
     public Category Category { get; set; } = null!;
+
+    public int FieldTypeId { get; set; }
+    public FieldType FieldType { get; set; } = null!;
 }
 

@@ -12,7 +12,7 @@ using Valkyrie.Infrastructure.Persistence;
 namespace Valkyrie.Infrastructure.Migrations
 {
     [DbContext(typeof(ValkyrieDBContext))]
-    [Migration("20250626200242_Init")]
+    [Migration("20250703204402_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -92,6 +92,9 @@ namespace Valkyrie.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
+                    b.Property<int>("FieldTypeId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Label")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -113,7 +116,68 @@ namespace Valkyrie.Infrastructure.Migrations
 
                     b.HasIndex("CategoryId");
 
+                    b.HasIndex("FieldTypeId");
+
                     b.ToTable("Fields", (string)null);
+                });
+
+            modelBuilder.Entity("Valkyrie.Domain.Entities.FieldType", b =>
+                {
+                    b.Property<int>("FieldTypeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("FieldTypeId"));
+
+                    b.Property<string>("Structure")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("FieldTypeId");
+
+                    b.ToTable("FieldTypes", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            FieldTypeId = 1,
+                            Structure = "{}",
+                            Type = "Date"
+                        },
+                        new
+                        {
+                            FieldTypeId = 2,
+                            Structure = "{}",
+                            Type = "Time"
+                        },
+                        new
+                        {
+                            FieldTypeId = 3,
+                            Structure = "{}",
+                            Type = "Number"
+                        },
+                        new
+                        {
+                            FieldTypeId = 4,
+                            Structure = "{}",
+                            Type = "Text"
+                        },
+                        new
+                        {
+                            FieldTypeId = 5,
+                            Structure = "{}",
+                            Type = "Boolean"
+                        },
+                        new
+                        {
+                            FieldTypeId = 6,
+                            Structure = "{}",
+                            Type = "SingleSelect"
+                        });
                 });
 
             modelBuilder.Entity("Valkyrie.Domain.Entities.Field", b =>
@@ -124,7 +188,15 @@ namespace Valkyrie.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Valkyrie.Domain.Entities.FieldType", "FieldType")
+                        .WithMany()
+                        .HasForeignKey("FieldTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Category");
+
+                    b.Navigation("FieldType");
                 });
 
             modelBuilder.Entity("Valkyrie.Domain.Entities.Category", b =>

@@ -17,6 +17,7 @@ public class AutoMapperProfile : Profile
             .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category))
             .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.CategoryId));
         CreateMap<Category, CategoryDto>();
+        CreateMap<FieldType, FieldTypeDto>();
 
         // Command to Entity mappings
         CreateMap<CreateFieldCommand, Field>()

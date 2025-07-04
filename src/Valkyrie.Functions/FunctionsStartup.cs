@@ -20,6 +20,15 @@ public static class FunctionsStartup
     public static IHost BuildHost()
     {
         return new HostBuilder()
+              .ConfigureAppConfiguration((hostingContext, config) =>
+              {
+                  // Explicitly set the path to the project directory for local testing
+                  var basePath = Directory.GetCurrentDirectory(); 
+                  config.SetBasePath(basePath);
+                  config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: false);
+                  config.AddEnvironmentVariables();
+                  var configuration = config.Build();
+              })
             .UseSerilog((context, services, configuration) =>
             {
                 var environment = context.HostingEnvironment.EnvironmentName;
@@ -51,30 +60,16 @@ public static class FunctionsStartup
                         outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}");
                 }
             })
-            .ConfigureAppConfiguration((context, config) =>
-            {
-                config.AddJsonFile("appsettings.json", optional: true)
-                      .AddEnvironmentVariables();
-            })
-            .ConfigureServices((context, services) =>
-            {
-                services.AddValkyrieDbContext(context.Configuration);
-                services.AddValkyrieInfrastructure();
-                services.AddValkyrieApplicationServices();
-                services.AddSingleton<ICacheService, RedisCacheService>();
-                services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Application.Features.Fields.Commands.CreateField.CreateFieldCommand).Assembly));
-                services.AddLogging();
-            })
-            .ConfigureAppConfiguration((context, config) => { })
-            .ConfigureHostConfiguration((config) => { })
-            .ConfigureServices((context, services) =>
-            {
-                // Seed the database after building the host
-                var sp = services.BuildServiceProvider();
-                using var scope = sp.CreateScope();
-                var db = scope.ServiceProvider.GetRequiredService<Valkyrie.Infrastructure.Persistence.ValkyrieDBContext>();
-                Valkyrie.Infrastructure.Persistence.SeedData.Seed(db);
-            })
+           .ConfigureServices((context, services) =>
+           {
+               services.AddValkyrieDbContext(context.Configuration);
+               services.AddValkyrieInfrastructure();
+               services.AddValkyrieApplicationServices();
+               services.AddSingleton<ICacheService, RedisCacheService>();
+               services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(
+                   typeof(Application.Features.Fields.Commands.CreateField.CreateFieldCommand).Assembly));
+               services.AddLogging();
+           })
             .Build();
     }
 }

@@ -25,23 +25,7 @@ public class Function
     // Parameterless constructor for Lambda test tool
     public Function()
     {
-        // Build the Generic Host using FunctionsStartup
-        var host = new HostBuilder()
-            .ConfigureAppConfiguration((context, config) =>
-            {
-                config.AddJsonFile("appsettings.json", optional: true)
-                      .AddEnvironmentVariables();
-            })
-            .ConfigureServices((context, services) =>
-            {
-                services.AddValkyrieDbContext(context.Configuration);
-                services.AddValkyrieInfrastructure();
-                services.AddValkyrieApplicationServices();
-                services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Application.Features.Fields.Commands.CreateField.CreateFieldCommand).Assembly));
-                services.AddLogging();
-            })
-            .Build();
-
+        var host = FunctionsStartup.BuildHost();
         _mediator = host.Services.GetRequiredService<IMediator>();
     }
 

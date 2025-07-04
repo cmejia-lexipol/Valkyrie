@@ -2,6 +2,7 @@ using Amazon.Lambda.Core;
 using MediatR;
 using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
+using Valkyrie.Application.Common.DTOs;
 
 namespace Valkyrie.Functions.Handlers;
 
@@ -27,7 +28,7 @@ public class GetCategoriesFunction
     /// </summary>
     /// <param name="context">The ILambdaContext that provides methods for logging and describing the Lambda environment.</param>
     /// <returns></returns>
-    public async Task<string> FunctionHandler(ILambdaContext context)
+    public async Task<IEnumerable<CategoryDto>> FunctionHandler(ILambdaContext context)
     {
         context.Logger.LogInformation("Getting all categories");
 
@@ -36,12 +37,12 @@ public class GetCategoriesFunction
             var categories = await _mediator.Send(new Application.Features.Categories.Queries.GetAllCategories.GetAllCategoriesQuery());
             context.Logger.LogInformation($"Retrieved {categories.Count()} categories");
             
-            return JsonSerializer.Serialize(categories);
+            return categories;
         }
         catch (Exception ex)
         {
             context.Logger.LogError($"Error getting categories: {ex.Message}");
-            return $"Error: {ex.Message}";
+            throw;
         }
     }
 } 

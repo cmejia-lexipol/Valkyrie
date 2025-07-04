@@ -1,6 +1,84 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
   "Transform": "AWS::Serverless-2016-10-31",
-  "Description": "This template is partially managed by Amazon.Lambda.Annotations (v0.13.0.0).",
-  "Resources": {}
+  "Description": "Valkyrie Lambda Functions",
+  "Resources": {
+    "GetFieldsFunction": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "Valkyrie.Functions::Valkyrie.Functions.Handlers.GetFieldsFunction::FunctionHandler",
+        "Runtime": "dotnet8",
+        "MemorySize": 256,
+        "Timeout": 30,
+        "CodeUri": ".",
+        "Policies": "AWSLambdaBasicExecutionRole"
+      }
+    },
+    "GetCategoriesFunction": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "Valkyrie.Functions::Valkyrie.Functions.Handlers.GetCategoriesFunction::FunctionHandler",
+        "Runtime": "dotnet8",
+        "MemorySize": 256,
+        "Timeout": 30,
+        "CodeUri": ".",
+        "Policies": "AWSLambdaBasicExecutionRole"
+      }
+    },
+    "GetFieldTypesFunction": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "Valkyrie.Functions::Valkyrie.Functions.Handlers.GetFieldTypesFunction::FunctionHandler",
+        "Runtime": "dotnet8",
+        "MemorySize": 256,
+        "Timeout": 30,
+        "CodeUri": ".",
+        "Policies": "AWSLambdaBasicExecutionRole"
+      }
+    },
+    "CreateFieldFunction": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "Valkyrie.Functions::Valkyrie.Functions.Handlers.CreateFieldFunction::FunctionHandler",
+        "Runtime": "dotnet8",
+        "MemorySize": 256,
+        "Timeout": 30,
+        "CodeUri": ".",
+        "Policies": "AWSLambdaBasicExecutionRole"
+      }
+    },
+    "UpdateFieldFunction": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "Valkyrie.Functions::Valkyrie.Functions.Handlers.UpdateFieldFunction::FunctionHandler",
+        "Runtime": "dotnet8",
+        "MemorySize": 256,
+        "Timeout": 30,
+        "CodeUri": ".",
+        "Policies": "AWSLambdaBasicExecutionRole"
+      }
+    },
+    "DeleteFieldFunction": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "Valkyrie.Functions::Valkyrie.Functions.Handlers.DeleteFieldFunction::FunctionHandler",
+        "Runtime": "dotnet8",
+        "MemorySize": 256,
+        "Timeout": 30,
+        "CodeUri": ".",
+        "Policies": "AWSLambdaBasicExecutionRole"
+      }
+    },
+    "GetFieldByIdFunction": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "Valkyrie.Functions::Valkyrie.Functions.Handlers.GetFieldByIdFunction::FunctionHandler",
+        "Runtime": "dotnet8",
+        "MemorySize": 256,
+        "Timeout": 30,
+        "CodeUri": ".",
+        "Policies": "AWSLambdaBasicExecutionRole"
+      }
+    }
+  }
 }

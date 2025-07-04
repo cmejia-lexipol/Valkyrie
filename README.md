@@ -19,10 +19,6 @@ dotnet ef database update --project src/Valkyrie.Infrastructure --startup-projec
 
 ## Local Testing: Configuration Notes
 
-- **TestConfigurationHelper**
-  - If you want to run local tests using the Functions solution (e.g., with the AWS Lambda Test Tool), make sure to update the `TestConfigurationHelper` class to use the correct configuration and service setup for your environment.
-  - This is especially important if you change connection strings, database providers, or dependency injection setup for local testing.
-
 - **appsettings files**
   - For local testing with the Functions solution, ensure that your `appsettings.json` (and optionally `appsettings.Development.json`) in `src/Valkyrie.Functions` are up to date with the correct connection strings and settings for your local environment.
   - The Functions solution will use these files when running locally, so any changes to database, logging, or other settings should be reflected here.
@@ -39,7 +35,7 @@ dotnet ef database update --project src/Valkyrie.Infrastructure --startup-projec
 
 ### Valkyrie.Functions
 - **Serverless solution for AWS Lambda**
-- Each operation (get, create, update, delete, etc.) can be an independent Lambda (Handlers) or a unified Lambda for testing (Function.cs, TestFunctions.cs).
+- Each operation (get, create, update, delete, etc.) is an independent Lambda function with its own handler.
 - **Typical deployment:** AWS Lambda, integrated with API Gateway.
 
 ---
@@ -65,26 +61,25 @@ dotnet ef database update --project src/Valkyrie.Infrastructure --startup-projec
     3. Open your browser at [http://localhost:5024/swagger](http://localhost:5024/swagger) (or the port shown in the console)
 
 - **How to test:**  
-  Use the Swagger UI to interactively test all endpoints (`/fields`, `/fields/{id}`, etc.).
+  Use the Swagger UI to interactively test all endpoints (`/fields`, `/fields/{id}`, `/categories`, `/fieldtypes`, etc.).
 
 ---
 
 ### Valkyrie.Functions (AWS Lambda)
 
 - **Purpose:**  
-  Test and deploy your logic as Lambda functions, either one function per operation or a unified function for testing.
+  Test and deploy your logic as individual Lambda functions, each handling a specific operation.
 
 - **Key structure:**
-  - **Handlers/**: Each file is a Lambda for a specific operation (e.g., `GetFieldsFunction`, `CreateFieldFunction`, etc.)
-  - **Function.cs**: A unified Lambda entry point, useful for end-to-end or integration testing.
-  - **TestFunctions.cs**: Special function for local testing with the AWS Lambda Test Tool.
+  - **Handlers/**: Each file is a Lambda for a specific operation (e.g., `GetFieldsFunction`, `CreateFieldFunction`, `GetCategoriesFunction`, etc.)
+  - **serverless.template**: Defines all Lambda functions for AWS Lambda Test Tool to automatically detect them
 
 - **How to test:**
   - **Visual Studio:**
     1. Right-click the `Valkyrie.Functions` project
     2. Select "Debug" → "Start New Instance"
     3. Choose "AWS Lambda Test Tool" as the launch profile
-    4. Use the Test Tool panel to send test requests (see examples in the README)
+    4. Use the Test Tool panel to select and test individual handlers
   - **VS Code:**
     1. Open the project folder
     2. Install the AWS Lambda Test Tool if you don't have it:
@@ -96,12 +91,7 @@ dotnet ef database update --project src/Valkyrie.Infrastructure --startup-projec
        dotnet lambda test-tool-8.0
        ```
     4. Open your browser at the URL shown in the console (usually [http://localhost:5050](http://localhost:5050))
-    5. Select the `TestFunctions` class for unified local testing, or a specific handler for unit testing.
-
-- **What's the difference between Function.cs, the Handlers, and TestFunctions?**
-  - **Function.cs**: Lets you test the entire solution as a single Lambda (useful for integration or migration scenarios).
-  - **Handlers/**: Each file is a specialized Lambda for a single operation (best for production and granular deployment).
-  - **TestFunctions.cs**: Designed for quick local testing, lets you test all operations from a single entry point using the AWS Lambda Test Tool.
+    5. Select any individual handler from the dropdown to test specific operations
 
 ---
 
@@ -117,13 +107,13 @@ dotnet ef database update --project src/Valkyrie.Infrastructure --startup-projec
 - **VS Code:**
   - Install the test tool
   - `dotnet lambda test-tool-8.0`
-  - Use your browser to test
+  - Use your browser to test individual handlers
 
 ---
 
 ## Project Overview
 
-Valkyrie is a serverless application built with AWS Lambda that provides CRUD operations for Field entities. The project follows Clean Architecture principles to ensure maintainability, testability, and scalability.
+Valkyrie is a serverless application built with AWS Lambda that provides CRUD operations for Field entities with related Categories and FieldTypes. The project follows Clean Architecture principles to ensure maintainability, testability, and scalability.
 
 ## Architecture
 
@@ -133,7 +123,7 @@ Valkyrie is a serverless application built with AWS Lambda that provides CRUD op
     │   ├─ Valkyrie.Domain/           ← Entities, Interfaces, Business Rules
     │   ├─ Valkyrie.Application/      ← Business Logic, Services
     │   ├─ Valkyrie.Infrastructure/   ← Data Access, External Services
-    │   └─ Valkyrie.Functions/        ← AWS Lambda Handlers
+    │   ├─ Valkyrie.Functions/        ← AWS Lambda Handlers
     │   └─ Valkyrie.Api/              ← API Endpoints
     └─ tests/                          ← Unit and Integration Tests
 ```
@@ -148,7 +138,9 @@ Valkyrie is a serverless application built with AWS Lambda that provides CRUD op
 
 ## Features
 
-- ✅ **CRUD Operations**: Complete Create, Read, Update, Delete functionality
+- ✅ **CRUD Operations**: Complete Create, Read, Update, Delete functionality for Fields
+- ✅ **Category Management**: Full CRUD operations for Categories
+- ✅ **FieldType Management**: Read operations for FieldTypes with enum support
 - ✅ **Clean Architecture**: Proper separation of concerns
 - ✅ **Entity Framework Core**: PostgreSQL database with migrations
 - ✅ **Dependency Injection**: Proper DI container configuration
@@ -156,6 +148,7 @@ Valkyrie is a serverless application built with AWS Lambda that provides CRUD op
 - ✅ **AWS Lambda**: Serverless deployment ready
 - ✅ **Local Testing**: AWS Lambda Test Tool integration
 - ✅ **Audit Fields**: Automatic tracking of Created/Modified dates and users
+- ✅ **Relationships**: Fields can be associated with Categories and FieldTypes
 
 ## Available Functions
 
@@ -163,15 +156,21 @@ Valkyrie is a serverless application built with AWS Lambda that provides CRUD op
 
 Each CRUD operation has its own dedicated Lambda function:
 
-- **GetFieldsFunction**: Retrieve all fields
-- **GetFieldByIdFunction**: Retrieve field by ID
-- **CreateFieldFunction**: Create new field
-- **UpdateFieldFunction**: Update existing field
+#### Field Operations
+- **GetFieldsFunction**: Retrieve all fields with related Category data
+- **GetFieldByIdFunction**: Retrieve field by ID with related Category data
+- **CreateFieldFunction**: Create new field with CategoryId
+- **UpdateFieldFunction**: Update existing field with CategoryId
 - **DeleteFieldFunction**: Delete field by ID
 
-### Unified Testing Function
+#### Category Operations
+- **GetCategoriesFunction**: Retrieve all categories
+- **CreateCategoryFunction**: Create new category
+- **UpdateCategoryFunction**: Update existing category
+- **DeleteCategoryFunction**: Delete category by ID
 
-For local testing, use the `TestFunctions` class that handles all operations through a single endpoint.
+#### FieldType Operations
+- **GetFieldTypesFunction**: Retrieve all field types (Date, Time, Number, Text, Boolean)
 
 ## Testing
 
@@ -190,7 +189,7 @@ For local testing, use the `TestFunctions` class that handles all operations thr
 
 #### In VS Code/Cursor:
 1. Open VS Code/Cursor
-2. Navigate to `src/Valkyrie.Functions/TestFunctions.cs`
+2. Navigate to `src/Valkyrie.Functions/`
 3. Press F5 or use "Run and Debug" command
 4. Select "AWS Lambda Test Tool"
 
@@ -200,60 +199,11 @@ For local testing, use the `TestFunctions` class that handles all operations thr
 3. Select "Debug" → "Start New Instance"
 4. Select "AWS Lambda Test Tool"
 
-### Test Examples
-
-#### 🔍 GET ALL - Retrieve all fields
-```json
-{
-  "Operation": "getall"
-}
-```
-
-#### 🔍 GET BY ID - Retrieve field by ID
-```json
-{
-  "Operation": "getbyid",
-  "FieldId": 1
-}
-```
-
-#### ➕ CREATE - Create new field
-```json
-{
-  "Operation": "create",
-  "Name": "email",
-  "Label": "Email Address",
-  "Description": "User's email address",
-  "CategoryId": 1
-}
-```
-
-#### ✏️ UPDATE - Update existing field
-```json
-{
-  "Operation": "update",
-  "FieldId": 1,
-  "Name": "email_updated",
-  "Label": "Email Address Updated",
-  "Description": "Updated email address field",
-  "CategoryId": 2
-}
-```
-
-#### 🗑️ DELETE - Delete field
-```json
-{
-  "Operation": "delete",
-  "FieldId": 1
-}
-```
-
-
 ## Troubleshooting
 
 ### Common Issues
 
-#### ❌ Error: "Failed to find type Valkyrie.Functions.TestFunctions"
+#### ❌ Error: "Failed to find type [HandlerName]"
 
 **Cause**: The AWS Lambda Test Tool cannot find the compiled class.
 
@@ -276,8 +226,8 @@ For local testing, use the `TestFunctions` class that handles all operations thr
 **Cause**: Wrong function class being used.
 
 **Solution**:
-- Ensure you're using the `TestFunctions` class (not `Function`)
-- Verify the `function-handler` in `aws-lambda-tools-defaults.json` points to `TestFunctions`
+- Ensure you're using the correct handler class from the dropdown
+- Verify the `serverless.template` file contains all your handlers
 
 #### ❌ Error: "Invalid operation"
 
@@ -301,6 +251,7 @@ For local testing, use the `TestFunctions` class that handles all operations thr
    cd src/Valkyrie.Functions
    dotnet lambda deploy-function GetFieldsFunction
    dotnet lambda deploy-function CreateFieldFunction
+   dotnet lambda deploy-function GetCategoriesFunction
    # ... deploy other functions
    ```
 
@@ -332,26 +283,32 @@ For production deployment, configure these environment variables:
 
 ### Domain Layer (`Valkyrie.Domain`)
 
-- **Entities**: Business objects (Field, BaseEntity)
-- **Interfaces**: Repository contracts (IFieldRepository)
+- **Entities**: Business objects (Field, Category, FieldType, BaseEntity)
+- **Interfaces**: Repository contracts (IFieldRepository, ICategoryRepository, IFieldTypeRepository)
+- **Enums**: FieldTypeEnum (Date, Time, Number, Text, Boolean)
 
 ### Application Layer (`Valkyrie.Application`)
 
-- **Services**: Business logic services (IFieldService, FieldService)
+- **Features**: CQRS pattern with Commands and Queries
+  - **Fields**: CRUD operations for Field entities
+  - **Categories**: CRUD operations for Category entities
+  - **FieldTypes**: Query operations for FieldType entities
+- **Common**: DTOs, AutoMapper profiles, and service extensions
 - **Extensions**: DI registration extensions
 
 ### Infrastructure Layer (`Valkyrie.Infrastructure`)
 
 - **Persistence**: Entity Framework configuration and DbContext
-- **Repositories**: Data access implementations
+- **Repositories**: Data access implementations for all entities
 - **Caching**: Redis cache service (if needed)
 - **Migrations**: Database schema migrations
+- **SeedData**: Initial data seeding for Categories and FieldTypes
 
 ### Functions Layer (`Valkyrie.Functions`)
 
-- **Handlers**: Individual Lambda function handlers
-- **Startup**: Generic Host configuration
-- **Testing**: Test functions and configurations
+- **Handlers**: Individual Lambda function handlers for each operation
+- **FunctionsStartup**: Generic Host configuration and dependency injection
+- **serverless.template**: AWS Lambda function definitions for testing
 
 ## Best Practices
 
@@ -361,6 +318,7 @@ For production deployment, configure these environment variables:
 2. **Dependency Inversion**: High-level modules don't depend on low-level modules
 3. **Interface Segregation**: Clients depend only on interfaces they use
 4. **Single Responsibility**: Each class has one reason to change
+5. **CQRS Pattern**: Separate commands and queries for better maintainability
 
 ### Testing Strategy
 
@@ -385,7 +343,6 @@ For production deployment, configure these environment variables:
 - **Alarms**: Set up alarms for error rates and performance
 - **Dashboards**: Create dashboards for monitoring
 
-
 ## Contributing
 
 1. Follow Clean Architecture principles
@@ -402,3 +359,5 @@ For production deployment, configure these environment variables:
 4. **Monitoring**: Set up comprehensive monitoring and alerting
 5. **CI/CD**: Implement automated deployment pipeline
 6. **Testing**: Add comprehensive unit and integration tests
+7. **Validation**: Add FluentValidation for input validation
+8. **Rate Limiting**: Implement API rate limiting

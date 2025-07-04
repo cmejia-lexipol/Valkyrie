@@ -114,4 +114,11 @@ app.MapGet("/categories", async (IMediator mediator) =>
     return Results.Ok(categories);
 });
 
+// GET ALL FIELD TYPES
+app.MapGet("/fieldtypes", async (IMediator mediator) =>
+{
+    var fieldTypes = await mediator.Send(new Valkyrie.Application.Features.FieldTypes.Queries.GetAllFieldTypes.GetAllFieldTypesQuery());
+    return Results.Ok(fieldTypes);
+});
+
 app.Run();
