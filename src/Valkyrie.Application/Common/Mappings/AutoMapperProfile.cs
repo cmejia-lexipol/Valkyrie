@@ -15,7 +15,9 @@ public class AutoMapperProfile : Profile
         // Entity to DTO mappings
         CreateMap<Field, FieldDto>()
             .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category))
-            .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.CategoryId));
+            .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.CategoryId))
+            .ForMember(dest => dest.FieldType, opt => opt.MapFrom(src => src.FieldType))
+            .ForMember(dest => dest.FieldTypeId, opt => opt.MapFrom(src => src.FieldTypeId));
         CreateMap<Category, CategoryDto>();
         CreateMap<FieldType, FieldTypeDto>();
 
@@ -26,7 +28,9 @@ public class AutoMapperProfile : Profile
             .ForMember(dest => dest.ModifiedDate, opt => opt.Ignore())
             .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
             .ForMember(dest => dest.ModifiedBy, opt => opt.Ignore())
-            .ForMember(dest => dest.Category, opt => opt.Ignore());
+            .ForMember(dest => dest.Category, opt => opt.Ignore())
+            .ForMember(dest => dest.FieldType, opt => opt.Ignore())
+            .ForMember(dest => dest.FieldTypeId, opt => opt.MapFrom(src => src.FieldTypeId));
 
         CreateMap<UpdateFieldCommand, Field>()
             .ForMember(dest => dest.FieldId, opt => opt.MapFrom(src => src.Id))

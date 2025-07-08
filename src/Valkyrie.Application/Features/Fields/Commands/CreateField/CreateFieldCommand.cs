@@ -9,4 +9,5 @@ public record CreateFieldCommand : IRequest<FieldDto>
     public string Label { get; init; } = string.Empty;
     public string? Description { get; init; }
     public int CategoryId { get; init; }
+    public int FieldTypeId { get; init; }
 }

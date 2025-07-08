@@ -12,4 +12,6 @@ public record FieldDto
     public string? ModifiedBy { get; init; }
     public int CategoryId { get; init; }
     public CategoryDto? Category { get; init; }
+    public int FieldTypeId { get; init; }
+    public FieldTypeDto? FieldType { get; init; }
 }

@@ -40,7 +40,8 @@ public class CreateFieldFunction
                 Name = request.Name,
                 Label = request.Label,
                 Description = request.Description,
-                CategoryId = request.CategoryId
+                CategoryId = request.CategoryId,
+                FieldTypeId = request.FieldTypeId
             });
 
             context.Logger.LogInformation($"Created field with ID: {field.FieldId}");
@@ -65,4 +66,5 @@ public class CreateFieldRequest
     public string Label { get; set; } = string.Empty;
     public string? Description { get; set; }
     public int CategoryId { get; set; }
+    public int FieldTypeId { get; set; }
 }

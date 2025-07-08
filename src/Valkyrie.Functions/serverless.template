@@ -79,6 +79,17 @@
         "CodeUri": ".",
         "Policies": "AWSLambdaBasicExecutionRole"
       }
+    },
+     "AuthorizerFunction": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "Valkyrie.Functions::Valkyrie.Functions.Handlers.AuthorizerFunction::FunctionHandler",
+        "Runtime": "dotnet8",
+        "MemorySize": 256,
+        "Timeout": 30,
+        "CodeUri": ".",
+        "Policies": "AWSLambdaBasicExecutionRole"
+      }
     }
   }
 }
