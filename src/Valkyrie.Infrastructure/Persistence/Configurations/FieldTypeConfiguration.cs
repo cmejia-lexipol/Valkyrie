@@ -5,7 +5,7 @@ using Valkyrie.Domain.Enums;
 
 namespace Valkyrie.Infrastructure.Persistence.Configurations;
 
-public class FieldTypeConfiguration : IEntityTypeConfiguration<FieldType> 
+public class FieldTypeConfiguration : IEntityTypeConfiguration<FieldType>
 {
     public void Configure(EntityTypeBuilder<FieldType> builder)
     {

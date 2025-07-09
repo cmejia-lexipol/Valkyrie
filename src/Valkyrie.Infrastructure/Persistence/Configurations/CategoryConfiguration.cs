@@ -29,4 +29,4 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
             .HasPrincipalKey(c => c.CategoryId)
             .OnDelete(DeleteBehavior.Restrict);
     }
-} 
+}

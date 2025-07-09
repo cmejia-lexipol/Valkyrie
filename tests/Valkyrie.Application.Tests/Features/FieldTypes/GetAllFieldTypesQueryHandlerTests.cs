@@ -56,4 +56,4 @@ public class GetAllFieldTypesQueryHandlerTests
         // Assert
         Assert.Empty(result);
     }
-} 
+}

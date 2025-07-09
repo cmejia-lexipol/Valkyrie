@@ -8,4 +8,4 @@ public record CreateCategoryCommand : IRequest<CategoryDto>
     public string Name { get; init; } = string.Empty;
     public string? Description { get; init; }
     public int Rank { get; init; }
-} 
+}

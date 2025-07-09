@@ -21,4 +21,4 @@ public class GetAllCategoriesQueryHandler : IRequestHandler<GetAllCategoriesQuer
         var categories = await _categoryRepository.GetAllAsync();
         return _mapper.Map<IEnumerable<CategoryDto>>(categories);
     }
-} 
+}

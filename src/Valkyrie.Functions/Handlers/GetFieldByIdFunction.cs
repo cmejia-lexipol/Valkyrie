@@ -5,22 +5,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Valkyrie.Functions.Handlers;
 
-public class GetFieldByIdFunction
+public class GetFieldByIdFunction : LambdaHandlerBase
 {
-    private readonly IMediator _mediator;
+    public GetFieldByIdFunction(IMediator mediator) : base(mediator) { }
+    public GetFieldByIdFunction() : base() { }
 
-    // Constructor for dependency injection (used by your app)
-    public GetFieldByIdFunction(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
-    // Parameterless constructor for AWS Lambda (production)
-    public GetFieldByIdFunction()
-    {
-        var host = FunctionsStartup.BuildHost();
-        _mediator = host.Services.GetRequiredService<IMediator>();
-    }
 
     /// <summary>
     /// Lambda function handler for getting a field by ID

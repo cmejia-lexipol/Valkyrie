@@ -22,7 +22,7 @@ public class CreateFieldCommandHandler : IRequestHandler<CreateFieldCommand, Fie
 
     public async Task<FieldDto> Handle(CreateFieldCommand request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Creating new field with name: {FieldName} and label: {FieldLabel}", 
+        _logger.LogInformation("Creating new field with name: {FieldName} and label: {FieldLabel}",
             request.Name, request.Label);
 
         if (string.IsNullOrWhiteSpace(request.Name))
@@ -44,17 +44,17 @@ public class CreateFieldCommandHandler : IRequestHandler<CreateFieldCommand, Fie
 
             var result = await _fieldRepository.CreateAsync(field);
             _logger.LogInformation("Successfully created field with ID: {FieldId}", result.FieldId);
-            
+
             var dto = _mapper.Map<FieldDto>(result);
             _logger.LogDebug("Mapped field entity to DTO: {@FieldDto}", dto);
-            
+
             return dto;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error creating field with name: {FieldName}. Error: {ErrorMessage}", 
+            _logger.LogError(ex, "Error creating field with name: {FieldName}. Error: {ErrorMessage}",
                 request.Name, ex.Message);
             throw;
         }
     }
-} 
+}

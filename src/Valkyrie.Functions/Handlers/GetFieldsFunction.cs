@@ -6,22 +6,10 @@ using Valkyrie.Application.Common.DTOs;
 
 namespace Valkyrie.Functions.Handlers;
 
-public class GetFieldsFunction
+public class GetFieldsFunction : LambdaHandlerBase
 {
-    private readonly IMediator _mediator;
-
-    // Constructor for dependency injection (used by your app)
-    public GetFieldsFunction(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
-    // Parameterless constructor for AWS Lambda (production)
-    public GetFieldsFunction()
-    {
-        var host = FunctionsStartup.BuildHost();
-        _mediator = host.Services.GetRequiredService<IMediator>();
-    }
+    public GetFieldsFunction(IMediator mediator) : base(mediator) { }
+    public GetFieldsFunction() : base() { }
 
     /// <summary>
     /// Lambda function handler for getting all fields
@@ -36,7 +24,7 @@ public class GetFieldsFunction
         {
             var fields = await _mediator.Send(new Application.Features.Fields.Queries.GetAllFields.GetAllFieldsQuery());
             context.Logger.LogInformation($"Retrieved {fields.Count()} fields");
-            
+
             return fields;
         }
         catch (Exception ex)
@@ -45,4 +33,4 @@ public class GetFieldsFunction
             throw;
         }
     }
-} 
+}

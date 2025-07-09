@@ -17,4 +17,4 @@ public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryComman
         await _categoryRepository.DeleteAsync(request.Id);
         return Unit.Value;
     }
-} 
+}

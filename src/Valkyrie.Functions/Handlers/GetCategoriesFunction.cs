@@ -6,22 +6,10 @@ using Valkyrie.Application.Common.DTOs;
 
 namespace Valkyrie.Functions.Handlers;
 
-public class GetCategoriesFunction
+public class GetCategoriesFunction : LambdaHandlerBase
 {
-    private readonly IMediator _mediator;
-
-    // Constructor for dependency injection (used by your app)
-    public GetCategoriesFunction(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
-    // Parameterless constructor for AWS Lambda (production)
-    public GetCategoriesFunction()
-    {
-        var host = FunctionsStartup.BuildHost();
-        _mediator = host.Services.GetRequiredService<IMediator>();
-    }
+    public GetCategoriesFunction(IMediator mediator) : base(mediator) { }
+    public GetCategoriesFunction() : base() { }
 
     /// <summary>
     /// Lambda function handler for getting all categories
@@ -36,7 +24,7 @@ public class GetCategoriesFunction
         {
             var categories = await _mediator.Send(new Application.Features.Categories.Queries.GetAllCategories.GetAllCategoriesQuery());
             context.Logger.LogInformation($"Retrieved {categories.Count()} categories");
-            
+
             return categories;
         }
         catch (Exception ex)
@@ -45,4 +33,4 @@ public class GetCategoriesFunction
             throw;
         }
     }
-} 
+}

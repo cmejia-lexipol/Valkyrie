@@ -23,7 +23,7 @@ public static class FunctionsStartup
               .ConfigureAppConfiguration((hostingContext, config) =>
               {
                   // Explicitly set the path to the project directory for local testing
-                  var basePath = Directory.GetCurrentDirectory(); 
+                  var basePath = Directory.GetCurrentDirectory();
                   config.SetBasePath(basePath);
                   config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: false);
                   config.AddEnvironmentVariables();

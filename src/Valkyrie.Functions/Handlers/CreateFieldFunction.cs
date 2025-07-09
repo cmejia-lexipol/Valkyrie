@@ -5,23 +5,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Valkyrie.Functions.Handlers;
 
-public class CreateFieldFunction
+public class CreateFieldFunction : LambdaHandlerBase
 {
-    private readonly IMediator _mediator;
-
-    // Constructor for dependency injection (used by your app)
-    public CreateFieldFunction(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
-    // Parameterless constructor for AWS Lambda (production)
-    public CreateFieldFunction()
-    {
-        // Build the Generic Host using FunctionsStartup
-        var host = FunctionsStartup.BuildHost();
-        _mediator = host.Services.GetRequiredService<IMediator>();
-    }
+    public CreateFieldFunction(IMediator mediator) : base(mediator) { }
+    public CreateFieldFunction() : base() { }
 
     /// <summary>
     /// Lambda function handler for creating a new field

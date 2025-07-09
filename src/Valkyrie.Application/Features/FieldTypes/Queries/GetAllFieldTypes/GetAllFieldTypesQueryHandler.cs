@@ -21,4 +21,4 @@ public class GetAllFieldTypesQueryHandler : IRequestHandler<GetAllFieldTypesQuer
         var fieldTypes = await _fieldTypeRepository.GetAllAsync();
         return _mapper.Map<IEnumerable<FieldTypeDto>>(fieldTypes);
     }
-} 
+}

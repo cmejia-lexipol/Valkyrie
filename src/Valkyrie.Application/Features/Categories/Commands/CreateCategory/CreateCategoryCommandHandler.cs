@@ -23,4 +23,4 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
         var result = await _categoryRepository.CreateAsync(category);
         return _mapper.Map<CategoryDto>(result);
     }
-} 
+}

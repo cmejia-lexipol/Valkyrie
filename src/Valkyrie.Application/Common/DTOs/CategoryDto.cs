@@ -10,4 +10,4 @@ public record CategoryDto
     public DateTime? ModifiedDate { get; init; }
     public string CreatedBy { get; init; } = string.Empty;
     public string? ModifiedBy { get; init; }
-} 
+}

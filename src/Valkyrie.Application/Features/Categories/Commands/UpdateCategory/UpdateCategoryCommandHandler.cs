@@ -27,4 +27,4 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
         var result = await _categoryRepository.UpdateAsync(existingCategory);
         return _mapper.Map<CategoryDto>(result);
     }
-} 
+}

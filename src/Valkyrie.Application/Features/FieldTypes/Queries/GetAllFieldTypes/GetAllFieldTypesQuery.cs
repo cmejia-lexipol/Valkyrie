@@ -5,4 +5,4 @@ namespace Valkyrie.Application.Features.FieldTypes.Queries.GetAllFieldTypes;
 
 public record GetAllFieldTypesQuery : IRequest<IEnumerable<FieldTypeDto>>
 {
-} 
+}

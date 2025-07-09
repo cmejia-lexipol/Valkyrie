@@ -5,22 +5,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Valkyrie.Functions.Handlers;
 
-public class UpdateFieldFunction
+public class UpdateFieldFunction : LambdaHandlerBase
 {
-    private readonly IMediator _mediator;
-
-    // Constructor for dependency injection (used by your app)
-    public UpdateFieldFunction(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
-    // Parameterless constructor for AWS Lambda (production)
-    public UpdateFieldFunction()
-    {
-        var host = FunctionsStartup.BuildHost();
-        _mediator = host.Services.GetRequiredService<IMediator>();
-    }
+    public UpdateFieldFunction(IMediator mediator) : base(mediator) { }
+    public UpdateFieldFunction() : base() { }
 
     /// <summary>
     /// Lambda function handler for updating a field
