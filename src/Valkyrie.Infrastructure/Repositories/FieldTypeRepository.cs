@@ -21,4 +21,9 @@ public class FieldTypeRepository : IFieldTypeRepository
     {
         return await _context.FieldTypes.OrderBy(ft => ft.FieldTypeId).ToListAsync();
     }
+
+    public async Task<FieldType?> GetByIdAsync(int id)
+    {
+        return await _context.FieldTypes.FirstOrDefaultAsync(ft => ft.FieldTypeId == id);
+    }
 }

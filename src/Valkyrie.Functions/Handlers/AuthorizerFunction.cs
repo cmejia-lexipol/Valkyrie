@@ -71,6 +71,8 @@ public class AuthorizerFunction
         {
             contextDict["role"] = userRole;
         }
+        if (methodArn == null)
+            throw new ArgumentNullException(nameof(methodArn));
         return new APIGatewayCustomAuthorizerResponse
         {
             PrincipalID = principal.Identity?.Name ?? "user",
@@ -93,6 +95,8 @@ public class AuthorizerFunction
 
     private APIGatewayCustomAuthorizerResponse Deny(string methodArn)
     {
+        if (methodArn == null)
+            throw new ArgumentNullException(nameof(methodArn));
         return new APIGatewayCustomAuthorizerResponse
         {
             PrincipalID = "unauthorized",

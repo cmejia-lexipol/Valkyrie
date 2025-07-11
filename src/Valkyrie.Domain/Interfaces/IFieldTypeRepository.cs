@@ -7,4 +7,5 @@ namespace Valkyrie.Domain.Interfaces;
 public interface IFieldTypeRepository
 {
     Task<IEnumerable<FieldType>> GetAllAsync();
+    Task<FieldType?> GetByIdAsync(int id);
 }
