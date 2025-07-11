@@ -1,5 +1,5 @@
 using MediatR;
-using AutoMapper;
+using Valkyrie.Application.Common.Mappings;
 using Valkyrie.Domain.Entities;
 using Valkyrie.Domain.Interfaces;
 using Valkyrie.Application.Common.DTOs;
@@ -10,13 +10,15 @@ namespace Valkyrie.Application.Features.Fields.Commands.CreateField;
 public class CreateFieldCommandHandler : IRequestHandler<CreateFieldCommand, FieldDto>
 {
     private readonly IFieldRepository _fieldRepository;
-    private readonly IMapper _mapper;
+    private readonly FieldMapper _fieldMapper;
+    private readonly FieldCommandMapper _fieldCommandMapper;
     private readonly ILogger<CreateFieldCommandHandler> _logger;
 
-    public CreateFieldCommandHandler(IFieldRepository fieldRepository, IMapper mapper, ILogger<CreateFieldCommandHandler> logger)
+    public CreateFieldCommandHandler(IFieldRepository fieldRepository, FieldMapper fieldMapper, FieldCommandMapper fieldCommandMapper, ILogger<CreateFieldCommandHandler> logger)
     {
         _fieldRepository = fieldRepository;
-        _mapper = mapper;
+        _fieldMapper = fieldMapper;
+        _fieldCommandMapper = fieldCommandMapper;
         _logger = logger;
     }
 
@@ -39,13 +41,13 @@ public class CreateFieldCommandHandler : IRequestHandler<CreateFieldCommand, Fie
 
         try
         {
-            var field = _mapper.Map<Field>(request);
+            var field = _fieldCommandMapper.ToEntity(request);
             _logger.LogDebug("Mapped command to field entity: {@FieldEntity}", field);
 
             var result = await _fieldRepository.CreateAsync(field);
             _logger.LogInformation("Successfully created field with ID: {FieldId}", result.FieldId);
 
-            var dto = _mapper.Map<FieldDto>(result);
+            var dto = _fieldMapper.ToDto(result);
             _logger.LogDebug("Mapped field entity to DTO: {@FieldDto}", dto);
 
             return dto;

@@ -1,6 +1,6 @@
 using Xunit;
 using Moq;
-using AutoMapper;
+using Valkyrie.Application.Common.Mappings;
 using Valkyrie.Application.Features.FieldTypes.Queries.GetAllFieldTypes;
 using Valkyrie.Domain.Interfaces;
 using Valkyrie.Domain.Entities;
@@ -10,18 +10,14 @@ using Assert = Xunit.Assert;
 public class GetAllFieldTypesQueryHandlerTests
 {
     private readonly Mock<IFieldTypeRepository> _mockRepo;
-    private readonly IMapper _mapper;
+    private readonly FieldTypeMapper _fieldTypeMapper;
     private readonly GetAllFieldTypesQueryHandler _handler;
 
     public GetAllFieldTypesQueryHandlerTests()
     {
         _mockRepo = new Mock<IFieldTypeRepository>();
-        var config = new MapperConfiguration(cfg =>
-        {
-            cfg.CreateMap<FieldType, FieldTypeDto>();
-        });
-        _mapper = config.CreateMapper();
-        _handler = new GetAllFieldTypesQueryHandler(_mockRepo.Object, _mapper);
+        _fieldTypeMapper = new FieldTypeMapper();
+        _handler = new GetAllFieldTypesQueryHandler(_mockRepo.Object, _fieldTypeMapper);
     }
 
     [Fact]

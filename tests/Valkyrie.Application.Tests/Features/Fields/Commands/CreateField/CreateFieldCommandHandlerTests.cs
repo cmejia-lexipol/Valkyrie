@@ -1,6 +1,6 @@
 ﻿using Xunit;
 using Moq;
-using AutoMapper;
+using Valkyrie.Application.Common.Mappings;
 using Valkyrie.Domain.Entities;
 using Valkyrie.Domain.Interfaces;
 using Valkyrie.Application.Common.DTOs;
@@ -21,7 +21,8 @@ public class CreateFieldCommandHandlerTests
     {
         // Arrange
         var mockRepo = new Mock<IFieldRepository>();
-        var mockMapper = new Mock<IMapper>();
+        var fieldMapper = new FieldMapper();
+        var fieldCommandMapper = new FieldCommandMapper();
         var mockLogger = new Mock<ILogger<CreateFieldCommandHandler>>();
 
         var command = new CreateFieldCommand
@@ -31,14 +32,30 @@ public class CreateFieldCommandHandlerTests
             Description = "Test Description"
         };
 
-        var fieldEntity = new Field { FieldId = 1, Name = command.Name, Label = command.Label, Description = command.Description };
-        var fieldDto = new FieldDto { FieldId = 1, Name = command.Name, Label = command.Label, Description = command.Description };
+        var fieldEntity = new Field {
+            FieldId = 1,
+            Name = command.Name,
+            Label = command.Label,
+            Description = command.Description,
+            CategoryId = 1,
+            Category = new Category { CategoryId = 1, Name = "Test Category" },
+            FieldTypeId = 1,
+            FieldType = new FieldType { FieldTypeId = 1, Type = Valkyrie.Domain.Enums.FieldTypeEnum.Text, Structure = "{}" }
+        };
+        var fieldDto = new FieldDto {
+            FieldId = 1,
+            Name = command.Name,
+            Label = command.Label,
+            Description = command.Description,
+            CategoryId = 1,
+            Category = new CategoryDto { CategoryId = 1, Name = "Test Category" },
+            FieldTypeId = 1,
+            FieldType = new FieldTypeDto { FieldTypeId = 1, Type = Valkyrie.Domain.Enums.FieldTypeEnum.Text.ToString(), Structure = "{}" }
+        };
 
-        mockMapper.Setup(m => m.Map<Field>(command)).Returns(fieldEntity);
-        mockRepo.Setup(r => r.CreateAsync(fieldEntity)).ReturnsAsync(fieldEntity);
-        mockMapper.Setup(m => m.Map<FieldDto>(fieldEntity)).Returns(fieldDto);
+        mockRepo.Setup(r => r.CreateAsync(It.IsAny<Field>())).ReturnsAsync(fieldEntity);
 
-        var handler = new CreateFieldCommandHandler(mockRepo.Object, mockMapper.Object, mockLogger.Object);
+        var handler = new CreateFieldCommandHandler(mockRepo.Object, fieldMapper, fieldCommandMapper, mockLogger.Object);
 
         // Act
         var result = await handler.Handle(command, CancellationToken.None);

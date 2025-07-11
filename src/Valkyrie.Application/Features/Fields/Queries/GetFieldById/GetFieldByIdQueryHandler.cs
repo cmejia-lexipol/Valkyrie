@@ -1,5 +1,5 @@
 using MediatR;
-using AutoMapper;
+using Valkyrie.Application.Common.Mappings;
 using Valkyrie.Domain.Entities;
 using Valkyrie.Domain.Interfaces;
 using Valkyrie.Application.Common.DTOs;
@@ -9,12 +9,12 @@ namespace Valkyrie.Application.Features.Fields.Queries.GetFieldById;
 public class GetFieldByIdQueryHandler : IRequestHandler<GetFieldByIdQuery, FieldDto?>
 {
     private readonly IFieldRepository _fieldRepository;
-    private readonly IMapper _mapper;
+    private readonly FieldMapper _fieldMapper;
 
-    public GetFieldByIdQueryHandler(IFieldRepository fieldRepository, IMapper mapper)
+    public GetFieldByIdQueryHandler(IFieldRepository fieldRepository, FieldMapper fieldMapper)
     {
         _fieldRepository = fieldRepository;
-        _mapper = mapper;
+        _fieldMapper = fieldMapper;
     }
 
     public async Task<FieldDto?> Handle(GetFieldByIdQuery request, CancellationToken cancellationToken)
@@ -23,6 +23,6 @@ public class GetFieldByIdQueryHandler : IRequestHandler<GetFieldByIdQuery, Field
             throw new ArgumentException("Field ID must be greater than 0", nameof(request.Id));
 
         var field = await _fieldRepository.GetByIdAsync(request.Id);
-        return field != null ? _mapper.Map<FieldDto>(field) : null;
+        return field != null ? _fieldMapper.ToDto(field) : null;
     }
 }

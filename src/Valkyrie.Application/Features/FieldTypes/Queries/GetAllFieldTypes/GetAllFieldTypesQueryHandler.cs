@@ -1,24 +1,24 @@
-using AutoMapper;
 using Valkyrie.Application.Common.DTOs;
 using Valkyrie.Domain.Interfaces;
 using MediatR;
+using Valkyrie.Application.Common.Mappings;
 
 namespace Valkyrie.Application.Features.FieldTypes.Queries.GetAllFieldTypes;
 
 public class GetAllFieldTypesQueryHandler : IRequestHandler<GetAllFieldTypesQuery, IEnumerable<FieldTypeDto>>
 {
     private readonly IFieldTypeRepository _fieldTypeRepository;
-    private readonly IMapper _mapper;
+    private readonly FieldTypeMapper _fieldTypeMapper;
 
-    public GetAllFieldTypesQueryHandler(IFieldTypeRepository fieldTypeRepository, IMapper mapper)
+    public GetAllFieldTypesQueryHandler(IFieldTypeRepository fieldTypeRepository, FieldTypeMapper fieldTypeMapper)
     {
         _fieldTypeRepository = fieldTypeRepository;
-        _mapper = mapper;
+        _fieldTypeMapper = fieldTypeMapper;
     }
 
     public async Task<IEnumerable<FieldTypeDto>> Handle(GetAllFieldTypesQuery request, CancellationToken cancellationToken)
     {
         var fieldTypes = await _fieldTypeRepository.GetAllAsync();
-        return _mapper.Map<IEnumerable<FieldTypeDto>>(fieldTypes);
+        return fieldTypes.Select(_fieldTypeMapper.ToDto);
     }
 }

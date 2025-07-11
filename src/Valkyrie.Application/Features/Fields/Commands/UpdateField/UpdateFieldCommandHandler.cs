@@ -1,5 +1,5 @@
 using MediatR;
-using AutoMapper;
+using Valkyrie.Application.Common.Mappings;
 using Valkyrie.Domain.Entities;
 using Valkyrie.Domain.Interfaces;
 using Valkyrie.Application.Common.DTOs;
@@ -9,12 +9,14 @@ namespace Valkyrie.Application.Features.Fields.Commands.UpdateField;
 public class UpdateFieldCommandHandler : IRequestHandler<UpdateFieldCommand, FieldDto>
 {
     private readonly IFieldRepository _fieldRepository;
-    private readonly IMapper _mapper;
+    private readonly FieldMapper _fieldMapper;
+    private readonly FieldCommandMapper _fieldCommandMapper;
 
-    public UpdateFieldCommandHandler(IFieldRepository fieldRepository, IMapper mapper)
+    public UpdateFieldCommandHandler(IFieldRepository fieldRepository, FieldMapper fieldMapper, FieldCommandMapper fieldCommandMapper)
     {
         _fieldRepository = fieldRepository;
-        _mapper = mapper;
+        _fieldMapper = fieldMapper;
+        _fieldCommandMapper = fieldCommandMapper;
     }
 
     public async Task<FieldDto> Handle(UpdateFieldCommand request, CancellationToken cancellationToken)
@@ -33,9 +35,9 @@ public class UpdateFieldCommandHandler : IRequestHandler<UpdateFieldCommand, Fie
             throw new InvalidOperationException($"Field with ID {request.Id} not found");
 
         // Map the command to the existing field, preserving audit fields
-        _mapper.Map(request, existingField);
+        _fieldCommandMapper.UpdateEntity(request, existingField);
 
         var result = await _fieldRepository.UpdateAsync(existingField);
-        return _mapper.Map<FieldDto>(result);
+        return _fieldMapper.ToDto(result);
     }
 }
